@@ -25,7 +25,7 @@ public class Book {
     private Author author;
 
     @ManyToMany(mappedBy = "books")
-    private List<User> users = new ArrayList<>();
+    private List<Reader> readers = new ArrayList<>();
 
     public Long getId() {
         return id;

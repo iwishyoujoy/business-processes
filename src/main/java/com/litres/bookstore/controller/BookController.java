@@ -1,6 +1,5 @@
 package com.litres.bookstore.controller;
 
-import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +7,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// TODO: хендлить разные ошибки - написать кастомные
+
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
     @Autowired
     private BookService bookService;
+
 
     @GetMapping
     public List<Book> getAllBooks() {

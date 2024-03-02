@@ -44,6 +44,4 @@ public class BookService {
         book.setAuthor(author);
         bookRepository.save(book);
     }
-
-    // Добавьте другие методы для обновления, удаления книги и т.д.
 }
