@@ -58,4 +58,12 @@ public class Book {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
 }

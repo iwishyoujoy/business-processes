@@ -1,5 +1,6 @@
 package com.litres.bookstore.controller;
 
+import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,4 +24,10 @@ public class BookController {
     public Book createBook(@RequestBody Book book) {
         return bookService.createBook(book);
     }
+
+    @GetMapping("/{id}")
+    public Book getAuthorById(@PathVariable Long id) {
+        return bookService.getBookById(id);
+    }
+
 }

@@ -86,4 +86,8 @@ public class User {
     public void setMoney(Float money) {
         this.money = money;
     }
+
+    public List<Book> getBooks() {
+        return books;
+    }
 }
