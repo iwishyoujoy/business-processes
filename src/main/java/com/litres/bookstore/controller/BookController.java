@@ -2,7 +2,6 @@ package com.litres.bookstore.controller;
 
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +12,11 @@ import java.util.List;
 @RequestMapping("/api/books")
 public class BookController {
 
-    @Autowired
     private BookService bookService;
 
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @GetMapping
     public List<Book> getAllBooks() {

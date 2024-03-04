@@ -19,10 +19,13 @@ import com.litres.bookstore.model.Book;
 @RequestMapping("/api/authors")
 public class AuthorController {
 
-    @Autowired
     private AuthorService authorService;
-    @Autowired
     private BookService bookService;
+
+    public AuthorController(AuthorService authorService, BookService bookService) {
+        this.authorService = authorService;
+        this.bookService = bookService;
+    }
 
     @GetMapping
     public List<Author> getAllAuthors() {

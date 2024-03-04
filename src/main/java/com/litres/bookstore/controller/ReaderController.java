@@ -17,8 +17,11 @@ import com.litres.bookstore.model.*;
 @RequestMapping("/api/users")
 public class ReaderController {
 
-    @Autowired
     private ReaderService readerService;
+
+    public ReaderController(ReaderService readerService) {
+        this.readerService = readerService;
+    }
 
     @GetMapping
     public List<Reader> getAllReaders() {
