@@ -2,7 +2,6 @@ package com.litres.bookstore.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.litres.bookstore.repository.ReaderRepository;
@@ -11,8 +10,11 @@ import com.litres.bookstore.model.*;
 @Service
 public class ReaderService {
 
-    @Autowired
     private ReaderRepository readerRepository;
+
+    public ReaderService(ReaderRepository readerRepository) {
+        this.readerRepository = readerRepository;
+    }
 
     public List<Reader> getAllReaders() {
         return readerRepository.findAll();

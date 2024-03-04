@@ -2,7 +2,6 @@ package com.litres.bookstore.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.litres.bookstore.repository.AuthorRepository;
@@ -13,10 +12,13 @@ import com.litres.bookstore.model.Book;
 @Service
 public class BookService {
 
-    @Autowired
     private BookRepository bookRepository;
-    @Autowired
     private AuthorRepository authorRepository;
+
+    public BookService(AuthorRepository authorRepository, BookRepository bookRepository) {
+        this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
+    }
 
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
