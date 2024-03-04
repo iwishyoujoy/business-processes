@@ -13,7 +13,9 @@ import jakarta.persistence.ManyToOne;
 import lombok.Setter;
 import lombok.Getter;
 
-@Entity @Getter @Setter
+@Entity
+@Getter
+@Setter
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

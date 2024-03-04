@@ -14,7 +14,9 @@ import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity @Getter @Setter
+@Entity
+@Getter
+@Setter
 public class Reader {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
