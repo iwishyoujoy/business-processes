@@ -1,12 +1,10 @@
 package com.litres.bookstore.controller;
 
-import com.litres.bookstore.model.Book;
+import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.service.BookService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-// TODO: хендлить разные ошибки - написать кастомные
 
 @RestController
 @RequestMapping("/api/books")
@@ -19,17 +17,17 @@ public class BookController {
     }
 
     @GetMapping
-    public List<Book> getAllBooks() {
+    public List<BookDTO> getAllBooks() {
         return bookService.getAllBooks();
     }
 
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookService.createBook(book);
+    public BookDTO createBook(@RequestBody BookDTO bookDTO) {
+        return bookService.createBook(bookDTO);
     }
 
     @GetMapping("/{id}")
-    public Book getAuthorById(@PathVariable Long id) {
+    public BookDTO getAuthorById(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 

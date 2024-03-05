@@ -4,31 +4,21 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.litres.bookstore.repository.AuthorRepository;
-import com.litres.bookstore.model.Author;
+import com.litres.bookstore.dto.AuthorDTO;
+import com.litres.bookstore.dto.BookDTO;
 
 @Service
-public class AuthorService {
+public interface AuthorService {
 
-    private AuthorRepository authorRepository;
+    List<AuthorDTO> getAllAuthors();
 
-    public AuthorService(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
+    AuthorDTO createAuthor(AuthorDTO author);
 
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
-    }
+    AuthorDTO getAuthorById(Long id);
 
-    public Author createAuthor(Author author) {
-        return authorRepository.save(author);
-    }
+    AuthorDTO getAuthorByLogin(String login);
 
-    public Author getAuthorById(Long id) {
-        return authorRepository.getReferenceById(id);
-    }
+    List<BookDTO> getBooksByAuthorId(Long authorId);
 
-    public Author getAuthorByLogin(String login) {
-        return authorRepository.findByLogin(login);
-    }
+    List<BookDTO> getBooksByAuthorLogin(String login);
 }

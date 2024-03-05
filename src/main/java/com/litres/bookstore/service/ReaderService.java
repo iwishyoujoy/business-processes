@@ -4,59 +4,23 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.litres.bookstore.repository.ReaderRepository;
-import com.litres.bookstore.model.*;
+import com.litres.bookstore.dto.BookDTO;
+import com.litres.bookstore.dto.ReaderDTO;
 
 @Service
-public class ReaderService {
+public interface ReaderService {
 
-    private ReaderRepository readerRepository;
+    List<ReaderDTO> getAllReaders();
 
-    public ReaderService(ReaderRepository readerRepository) {
-        this.readerRepository = readerRepository;
-    }
+    ReaderDTO createReader(ReaderDTO reader);
 
-    public List<Reader> getAllReaders() {
-        return readerRepository.findAll();
-    }
+    ReaderDTO getReaderById(Long id);
 
-    public Reader createReader(Reader user) {
-        return readerRepository.save(user);
-    }
+    ReaderDTO getReaderByLogin(String login);
 
-    public Reader getReaderById(Long id) {
-        return readerRepository.getReferenceById(id);
-    }
+    List<BookDTO> getBooksForReaderByLogin(String readerLogin);
 
-    public Reader getReaderByLogin(String login) {
-        return readerRepository.findByLogin(login);
-    }
+    List<BookDTO> getBooksForReaderById(Long readerId);
 
-    public List<Book> getBooksForReaderByLogin(String userLogin) {
-        Reader reader = readerRepository.findByLogin(userLogin);
-        if (reader != null) {
-            return reader.getBooks();
-        }
-        return null;
-    }
-
-    public List<Book> getBooksForReaderById(Long userId) {
-        Reader reader = readerRepository.getReferenceById(userId);
-        if (reader != null) {
-            return reader.getBooks();
-        }
-        return null;
-    }
-
-    public void addBookToReader(String readerLogin, Long bookId) {
-        Reader reader = readerRepository.findByLogin(readerLogin);
-        if (reader != null) {
-            Book book = new Book();
-            book.setId(bookId);
-            reader.getBooks().add(book);
-            readerRepository.save(reader);
-        } else {
-            throw new RuntimeException("User not found");
-        }
-    }
+    void addBookToReader(String readerLogin, Long bookId);
 }

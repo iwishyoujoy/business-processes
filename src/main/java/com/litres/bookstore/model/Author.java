@@ -31,4 +31,13 @@ public class Author {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
 
+    public Author(Long id, String login, String password, String name, String surname, String email, Float money){
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.money = money;
+    }
 }

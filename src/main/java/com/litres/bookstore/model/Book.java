@@ -31,4 +31,11 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     private List<Reader> readers = new ArrayList<>();
 
+    public Book (Long id, String title, String description, String content, Author author){
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.author = author;
+    }
 }
