@@ -68,12 +68,19 @@ public class BookServiceImpl implements BookService {
         Reader reader = readerRepository.findById(readerId)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
         
+        Author author = book.getAuthor();
         Float bookCost = book.getPrice();
+
         if (reader.getMoney() < bookCost) {
             throw new IllegalArgumentException("Not enough money on the reader's account");
         }
+
         reader.setMoney(reader.getMoney() - bookCost);
         Reader savedReader = readerRepository.save(reader);
+
+        author.setMoney(author.getMoney() + bookCost);
+        authorRepository.save(author);
+        
         book.getReaders().add(savedReader);
         savedReader.getBooks().add(book);
         Book savedBook = bookRepository.save(book);
