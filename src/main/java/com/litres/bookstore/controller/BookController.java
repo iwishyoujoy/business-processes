@@ -69,7 +69,7 @@ public class BookController {
         summary = "Add Book to Reader"
     )
     @PostMapping("/{bookId}/{readerId}")
-    public void addBookToReader(@RequestBody Long bookId, @RequestBody Long readerId) {
+    public void addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
         bookService.addReaderToBook(bookId, readerId);
     }
     
@@ -77,7 +77,7 @@ public class BookController {
         summary = "Delete Book by id"
     )
     @DeleteMapping("/{id}")
-    public void deleteBookById(@RequestBody Long id){
+    public void deleteBookById(@PathVariable Long id){
         bookService.deleteBookById(id);
     }
 }
