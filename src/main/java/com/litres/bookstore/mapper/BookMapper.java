@@ -23,7 +23,8 @@ public class BookMapper {
             book.getTitle(),
             book.getDescription(),
             book.getContent(),
-            book.getAuthor() != null ? book.getAuthor().getId() : null
+            book.getAuthor() != null ? book.getAuthor().getId() : null,
+            book.getPrice()
         );
         return bookDto;
     }
@@ -35,7 +36,8 @@ public class BookMapper {
             bookDTO.getTitle(),
             bookDTO.getDescription(),
             bookDTO.getContent(),
-            author
+            author,
+            bookDTO.getPrice()
         );
         return book;
     }

@@ -15,4 +15,5 @@ public class BookDTO {
     private String description;
     private String content;
     private Long authorId;
+    private Float price;
 }
