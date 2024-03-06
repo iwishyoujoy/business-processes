@@ -23,4 +23,6 @@ public interface ReaderService {
     List<BookDTO> getBooksForReaderById(Long readerId);
 
     void addBookToReader(String readerLogin, Long bookId);
+
+    void deleteReaderById(Long id);
 }

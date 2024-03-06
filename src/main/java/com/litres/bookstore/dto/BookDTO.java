@@ -1,7 +1,5 @@
 package com.litres.bookstore.dto;
 
-import com.litres.bookstore.model.Author;
-
 import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,5 +14,5 @@ public class BookDTO {
     private String title;
     private String description;
     private String content;
-    private Author author;
+    private Long authorId;
 }

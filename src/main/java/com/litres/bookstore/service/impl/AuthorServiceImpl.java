@@ -71,4 +71,9 @@ public class AuthorServiceImpl implements AuthorService {
             .map(AutoBookMapper.MAPPER::mapToBookDTO)
             .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAuthorById(Long id){
+        authorRepository.deleteById(id);
+    }
 }

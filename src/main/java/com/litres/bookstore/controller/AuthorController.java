@@ -2,6 +2,7 @@ package com.litres.bookstore.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,51 +11,111 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.litres.bookstore.service.AuthorService;
-import com.litres.bookstore.service.BookService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.BookDTO;
-import com.litres.bookstore.model.Author;
-import com.litres.bookstore.model.Book;
 
+@Tag(
+    name = "REST APIs for Authors",
+    description = "REST APIs - Create Author, Get Author by id / by login, Get All Authors, Get Books for Author by id / by login"
+)
 @RestController
 @RequestMapping("/api/authors")
 public class AuthorController {
 
     private AuthorService authorService;
-    private BookService bookService;
 
-    public AuthorController(AuthorService authorService, BookService bookService) {
+    public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
-        this.bookService = bookService;
     }
 
+    @Operation(
+        summary = "Get All Authors"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
     @GetMapping
-    public List<AuthorDTO> getAllAuthors() {
-        return authorService.getAllAuthors();
+    public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
+        return new ResponseEntity<>(authorService.getAllAuthors(), HttpStatus.OK);
     }
 
+    @Operation(
+        summary = "Create Author"
+    )
+    @ApiResponse(
+        responseCode = "201",
+        description = "HTTP Status 201 CREATED"
+    )
     @PostMapping
-    public AuthorDTO createAuthor(@RequestBody AuthorDTO author) {
-        return authorService.createAuthor(author);
+    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO author) {
+        return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public AuthorDTO getAuthorById(@PathVariable Long id) {
-        return authorService.getAuthorById(id);
+    @Operation(
+        summary = "Get Author by id"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/id/{id}")
+    public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable Long id) {
+        return new ResponseEntity<>(authorService.getAuthorById(id), HttpStatus.OK);
     }
 
+    @Operation(
+        summary = "Get Author by login"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
     @GetMapping("/login/{login}")
-    public AuthorDTO getAuthorByLogin(@PathVariable String login) {
-        return authorService.getAuthorByLogin(login);
+    public ResponseEntity<AuthorDTO> getAuthorByLogin(@PathVariable String login) {
+        return new ResponseEntity<>(authorService.getAuthorByLogin(login), HttpStatus.OK);
     }
 
-    @GetMapping("/{authorId}/books")
-    public List<BookDTO> getBooksForAuthor(@PathVariable Long authorId) {
-        return authorService.getBooksByAuthorId(authorId);
+    @Operation(
+        summary = "Get Books for Author by id"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/id/{id}/books")
+    public ResponseEntity<List<BookDTO>> getBooksForAuthorById(@PathVariable Long id) {
+        return new ResponseEntity<>(authorService.getBooksByAuthorId(id), HttpStatus.OK);
     }
 
-    @GetMapping("/{login}/books")
-    public List<BookDTO> getBooksForAuthorByLogin(@PathVariable String login) {
-        return authorService.getBooksByAuthorLogin(login);
+    @Operation(
+        summary = "Get Books for Author by login"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/login/{login}/books")
+    public ResponseEntity<List<BookDTO>> getBooksForAuthorByLogin(@PathVariable String login) {
+        return new ResponseEntity<>(authorService.getBooksByAuthorLogin(login), HttpStatus.OK);
+    }
+
+    @Operation(
+        summary = "Delete Author by id"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @DeleteMapping("/id/{id}")
+    public void getBooksForAuthorByLogin(@PathVariable Long id) {
+        authorService.deleteAuthorById(id);
     }
 }

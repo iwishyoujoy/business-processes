@@ -83,4 +83,9 @@ public class ReaderServiceImpl implements ReaderService{
             .map(book -> AutoBookMapper.MAPPER.mapToBookDTO(book))
             .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteReaderById(Long id){
+        readerRepository.deleteById(id);
+    }
 }
