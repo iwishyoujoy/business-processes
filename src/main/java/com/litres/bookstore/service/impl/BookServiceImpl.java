@@ -7,42 +7,44 @@ import com.litres.bookstore.model.Reader;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.BookService;
-import com.litres.bookstore.mapper.AutoBookMapper;
+
+import lombok.AllArgsConstructor;
+
+import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
 import java.util.stream.Collectors;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
     private ReaderRepository readerRepository;
-
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    private final BookMapper bookMapper;
 
     @Override
     public List<BookDTO> getAllBooks() {
         List<Book> books = bookRepository.findAll();
         return books.stream()
-            .map(AutoBookMapper.MAPPER::mapToBookDTO)
+            .map(book -> bookMapper.mapToBookDTO(book))
             .collect(Collectors.toList());
     }
 
     @Override
     public BookDTO createBook(BookDTO bookDTO) {
-        Book book = AutoBookMapper.MAPPER.mapToBook(bookDTO);
+        Book book = bookMapper.mapToBook(bookDTO);
+        System.out.println(book.getAuthor().getId());
         Book savedBook = bookRepository.save(book);
-        return AutoBookMapper.MAPPER.mapToBookDTO(savedBook);
+        return bookMapper.mapToBookDTO(savedBook);
     }
 
     @Override
     public BookDTO getBookById(Long id) {
         Book book = bookRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Book", "id", String.valueOf(id)));
-        return AutoBookMapper.MAPPER.mapToBookDTO(book);
+        return bookMapper.mapToBookDTO(book);
     }
 
     @Override

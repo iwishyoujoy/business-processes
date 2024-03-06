@@ -1,6 +1,6 @@
 package com.litres.bookstore.mapper;
 
-import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.exception.ResourceNotFoundException;
@@ -8,33 +8,39 @@ import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.repository.AuthorRepository;
 
+@Component
 public class BookMapper {
 
-    private static AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
-    public static BookDTO mapToBookDTO(Book book){
+    public BookMapper(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
+
+    public BookDTO mapToBookDTO(Book book){
         BookDTO bookDto = new BookDTO(
             book.getId(),
             book.getTitle(),
             book.getDescription(),
             book.getContent(),
-            book.getAuthor().getId()
+            book.getAuthor() != null ? book.getAuthor().getId() : null
         );
         return bookDto;
     }
 
-    public static Book mapToBook(BookDTO bookDTO){
+    public Book mapToBook(BookDTO bookDTO){
+        Author author = getAuthorById(bookDTO.getAuthorId());
         Book book = new Book(
             bookDTO.getId(),
             bookDTO.getTitle(),
             bookDTO.getDescription(),
             bookDTO.getContent(),
-            getAuthorById(bookDTO.getAuthorId())
+            author
         );
         return book;
     }
 
-    private static Author getAuthorById(Long id){
+    private Author getAuthorById(Long id){
         return authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(id)));
     }
 }

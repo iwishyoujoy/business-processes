@@ -8,22 +8,23 @@ import com.litres.bookstore.model.Author;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.service.AuthorService;
+
+import lombok.AllArgsConstructor;
+
 import com.litres.bookstore.mapper.AutoAuthorMapper;
-import com.litres.bookstore.mapper.AutoBookMapper;
+import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
-
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
-        this.authorRepository = authorRepository;
-    }
+    private final BookMapper bookMapper;
 
     @Override
     public List<AuthorDTO> getAllAuthors(){
@@ -59,7 +60,7 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepository.findById(authorId)
             .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(authorId)));
         return bookRepository.findByAuthorId(author.getId()).stream()
-            .map(AutoBookMapper.MAPPER::mapToBookDTO)
+            .map(book -> bookMapper.mapToBookDTO(book))
             .collect(Collectors.toList());
     }
 
@@ -68,7 +69,7 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepository.findByLogin(login)
             .orElseThrow(() -> new ResourceNotFoundException("Author", "login", login));
         return bookRepository.findByAuthorId(author.getId()).stream()
-            .map(AutoBookMapper.MAPPER::mapToBookDTO)
+            .map(book -> bookMapper.mapToBookDTO(book))
             .collect(Collectors.toList());
     }
 

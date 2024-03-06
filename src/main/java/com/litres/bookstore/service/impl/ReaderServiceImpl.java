@@ -10,8 +10,8 @@ import com.litres.bookstore.model.Reader;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.ReaderService;
-import com.litres.bookstore.mapper.AutoBookMapper;
 import com.litres.bookstore.mapper.AutoReaderMapper;
+import com.litres.bookstore.mapper.BookMapper;
 
 import lombok.AllArgsConstructor;
 
@@ -24,6 +24,7 @@ public class ReaderServiceImpl implements ReaderService{
 
     private ReaderRepository readerRepository;
     private BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
     @Override
     public List<ReaderDTO> getAllReaders(){
@@ -71,7 +72,7 @@ public class ReaderServiceImpl implements ReaderService{
         Reader reader = readerRepository.findByLogin(readerLogin)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "login", readerLogin));
         return reader.getBooks().stream()
-            .map(book -> AutoBookMapper.MAPPER.mapToBookDTO(book))
+            .map(book -> bookMapper.mapToBookDTO(book))
             .collect(Collectors.toList());
     }
 
@@ -80,7 +81,7 @@ public class ReaderServiceImpl implements ReaderService{
         Reader reader = readerRepository.findById(readerId)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
         return reader.getBooks().stream()
-            .map(book -> AutoBookMapper.MAPPER.mapToBookDTO(book))
+            .map(book -> bookMapper.mapToBookDTO(book))
             .collect(Collectors.toList());
     }
 
