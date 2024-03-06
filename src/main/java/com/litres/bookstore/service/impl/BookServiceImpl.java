@@ -35,7 +35,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDTO createBook(BookDTO bookDTO) {
         Book book = bookMapper.mapToBook(bookDTO);
-        System.out.println(book.getAuthor().getId());
         Book savedBook = bookRepository.save(book);
         return bookMapper.mapToBookDTO(savedBook);
     }
@@ -48,14 +47,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addReaderToBook(Long bookId, Long readerId) {
+    public BookDTO addReaderToBook(Long bookId, Long readerId) {
         Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new ResourceNotFoundException("Book", "id", String.valueOf(bookId)));
         Reader reader = readerRepository.findById(readerId)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
-        
         book.getReaders().add(reader);
-        bookRepository.save(book);
+        reader.getBooks().add(book);
+        Book savedBook = bookRepository.save(book);
+        return bookMapper.mapToBookDTO(savedBook);
     }
 
     @Override

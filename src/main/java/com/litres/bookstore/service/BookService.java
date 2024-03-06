@@ -15,7 +15,7 @@ public interface BookService {
 
     BookDTO getBookById(Long id);
 
-    void addReaderToBook(Long bookId, Long readerId);
+    BookDTO addReaderToBook(Long bookId, Long readerId);
 
     void deleteBookById(Long id);
 }

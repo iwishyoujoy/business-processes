@@ -69,8 +69,8 @@ public class BookController {
         summary = "Add Book to Reader"
     )
     @PostMapping("/{bookId}/{readerId}")
-    public void addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
-        bookService.addReaderToBook(bookId, readerId);
+    public ResponseEntity<BookDTO> addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
+        return new ResponseEntity<>(bookService.addReaderToBook(bookId, readerId), HttpStatus.CREATED);
     }
     
     @Operation(
