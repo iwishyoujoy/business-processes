@@ -22,5 +22,7 @@ public interface AuthorService {
 
     List<BookDTO> getBooksByAuthorLogin(String login);
 
+    AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO);
+
     void deleteAuthorById(Long id);
 }

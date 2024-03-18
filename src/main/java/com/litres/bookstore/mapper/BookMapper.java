@@ -45,4 +45,15 @@ public class BookMapper {
     private Author getAuthorById(Long id){
         return authorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(id)));
     }
+
+    public void mapToUpdatedBook(BookDTO bookDTO, Book book) {
+        book.setTitle(bookDTO.getTitle());
+        book.setDescription(bookDTO.getDescription());
+        book.setContent(bookDTO.getContent());
+        book.setPrice(bookDTO.getPrice());
+        if (bookDTO.getAuthorId() != null) {
+            Author author = getAuthorById(bookDTO.getAuthorId());
+            book.setAuthor(author);
+        }
+    }
 }

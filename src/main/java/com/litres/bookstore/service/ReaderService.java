@@ -24,5 +24,7 @@ public interface ReaderService {
 
     void addBookToReader(String readerLogin, Long bookId);
 
+    ReaderDTO updateReader(Long id, ReaderDTO readerDTO);
+
     void deleteReaderById(Long id);
 }

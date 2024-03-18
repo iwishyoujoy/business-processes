@@ -4,18 +4,22 @@ import org.springframework.stereotype.Service;
 
 import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.BookDTO;
+import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.model.Author;
+import com.litres.bookstore.model.Reader;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.service.AuthorService;
 
 import lombok.AllArgsConstructor;
 
+import com.litres.bookstore.mapper.AuthorMapper;
 import com.litres.bookstore.mapper.AutoAuthorMapper;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +29,7 @@ public class AuthorServiceImpl implements AuthorService {
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final AuthorMapper authorMapper;
 
     @Override
     public List<AuthorDTO> getAllAuthors(){
@@ -76,5 +81,18 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void deleteAuthorById(Long id){
         authorRepository.deleteById(id);
+    }
+
+    @Override
+    public AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO) {
+        Optional<Author> authorOptional = authorRepository.findById(id);
+        if (authorOptional.isPresent()) {
+            Author author = authorOptional.get();
+            authorMapper.mapToUpdatedAuthor(authorDTO, author);
+            Author updatedAuthor = authorRepository.save(author);
+            return authorMapper.mapToAuthorDTO(updatedAuthor);
+        } else {
+            throw new ResourceNotFoundException("Author", "id", String.valueOf(id));
+        }
     }
 }

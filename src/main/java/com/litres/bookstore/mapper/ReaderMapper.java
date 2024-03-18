@@ -1,11 +1,14 @@
 package com.litres.bookstore.mapper;
 
+import org.springframework.stereotype.Component;
+
 import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.model.Reader;
 
+@Component
 public class ReaderMapper {
 
-    public static ReaderDTO mapToReaderDTO(Reader reader){
+    public ReaderDTO mapToReaderDTO(Reader reader){
         ReaderDTO readerDto = new ReaderDTO(
             reader.getId(),
             reader.getLogin(),
@@ -18,7 +21,7 @@ public class ReaderMapper {
         return readerDto;
     }
 
-    public static Reader mapToReader(ReaderDTO readerDTO){
+    public Reader mapToReader(ReaderDTO readerDTO){
         Reader reader = new Reader(
             readerDTO.getId(),
             readerDTO.getLogin(),
@@ -29,5 +32,14 @@ public class ReaderMapper {
             readerDTO.getMoney()
         );
         return reader;
+    }
+
+    public void mapToUpdatedReader(ReaderDTO readerDTO, Reader reader) {
+        reader.setLogin(readerDTO.getLogin());
+        reader.setPassword(readerDTO.getPassword());
+        reader.setName(readerDTO.getName());
+        reader.setSurname(readerDTO.getSurname());
+        reader.setEmail(readerDTO.getEmail());
+        reader.setMoney(readerDTO.getMoney());
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -105,6 +106,22 @@ public class ReaderController {
     @GetMapping("/login/{login}/books")
     public ResponseEntity<List<BookDTO>> getBooksForReaderByLogin(@PathVariable String login) {
         return new ResponseEntity<>(readerService.getBooksForReaderByLogin(login), HttpStatus.OK);
+    }
+
+    @Operation(
+        summary = "Update Reader by id"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<ReaderDTO> updateReaderById(@PathVariable Long id, @RequestBody ReaderDTO readerDTO) {
+        ReaderDTO updatedReaderDTO = readerService.updateReader(id, readerDTO);
+        if (updatedReaderDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedReaderDTO, HttpStatus.OK);
     }
 
     @Operation(

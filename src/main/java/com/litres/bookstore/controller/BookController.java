@@ -72,6 +72,22 @@ public class BookController {
     public ResponseEntity<BookDTO> addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
         return new ResponseEntity<>(bookService.addReaderToBook(bookId, readerId), HttpStatus.CREATED);
     }
+
+    @Operation(
+        summary = "Update Book by id"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+        BookDTO updatedBookDTO = bookService.updateBook(id, bookDTO);
+        if (updatedBookDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updatedBookDTO, HttpStatus.OK);
+    }
     
     @Operation(
         summary = "Delete Book by id"

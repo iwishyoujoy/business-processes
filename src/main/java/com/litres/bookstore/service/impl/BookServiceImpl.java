@@ -17,6 +17,7 @@ import com.litres.bookstore.exception.ResourceNotFoundException;
 
 import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -90,5 +91,18 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBookById(Long id){
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public BookDTO updateBook(Long id, BookDTO bookDTO) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            bookMapper.mapToUpdatedBook(bookDTO, book);
+            Book updatedBook = bookRepository.save(book);
+            return bookMapper.mapToBookDTO(updatedBook);
+        } else {
+            throw new ResourceNotFoundException("Book", "id", String.valueOf(id));
+        }
     }
 }
