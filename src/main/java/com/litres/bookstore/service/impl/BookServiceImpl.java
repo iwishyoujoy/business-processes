@@ -1,6 +1,10 @@
 package com.litres.bookstore.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import lombok.AllArgsConstructor;
+
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
@@ -9,14 +13,9 @@ import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.BookService;
-
-import lombok.AllArgsConstructor;
-
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
-import java.util.stream.Collectors;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,11 +28,9 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public List<BookDTO> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
-        return books.stream()
-            .map(book -> bookMapper.mapToBookDTO(book))
-            .collect(Collectors.toList());
+    public Page<BookDTO> getAllBooks(Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(pageable);
+        return books.map(book -> bookMapper.mapToBookDTO(book));
     }
 
     @Override

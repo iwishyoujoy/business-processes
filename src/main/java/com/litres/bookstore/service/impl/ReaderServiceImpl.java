@@ -1,5 +1,8 @@
 package com.litres.bookstore.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.litres.bookstore.dto.BookDTO;
@@ -31,10 +34,9 @@ public class ReaderServiceImpl implements ReaderService{
     private final ReaderMapper readerMapper;
 
     @Override
-    public List<ReaderDTO> getAllReaders(){
-        List<Reader> readers = readerRepository.findAll();
-        return readers.stream().map((reader) -> AutoReaderMapper.MAPPER.mapToReaderDTO(reader))
-            .collect(Collectors.toList());
+    public Page<ReaderDTO> getAllReaders(Pageable pageable){
+        Page<Reader> readers = readerRepository.findAll(pageable);
+        return readers.map((reader) -> AutoReaderMapper.MAPPER.mapToReaderDTO(reader));
     }
 
     @Override 
@@ -72,21 +74,33 @@ public class ReaderServiceImpl implements ReaderService{
     }
 
    @Override
-    public List<BookDTO> getBooksForReaderByLogin(String readerLogin) {
+    public Page<BookDTO> getBooksForReaderByLogin(String readerLogin, Pageable pageable) {
         Reader reader = readerRepository.findByLogin(readerLogin)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "login", readerLogin));
-        return reader.getBooks().stream()
-            .map(book -> bookMapper.mapToBookDTO(book))
-            .collect(Collectors.toList());
+        List<Book> books = reader.getBooks();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), books.size());
+        if (start >= end) {
+            return Page.empty();
+        }
+        return new PageImpl<>(books.subList(start, end).stream()
+                .map(book -> bookMapper.mapToBookDTO(book))
+                .collect(Collectors.toList()), pageable, books.size());
     }
 
     @Override
-    public List<BookDTO> getBooksForReaderById(Long readerId) {
+    public Page<BookDTO> getBooksForReaderById(Long readerId, Pageable pageable) {
         Reader reader = readerRepository.findById(readerId)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
-        return reader.getBooks().stream()
-            .map(book -> bookMapper.mapToBookDTO(book))
-            .collect(Collectors.toList());
+        List<Book> books = reader.getBooks();
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), books.size());
+        if (start >= end) {
+            return Page.empty();
+        }
+        return new PageImpl<>(books.subList(start, end).stream()
+                .map(book -> bookMapper.mapToBookDTO(book))
+                .collect(Collectors.toList()), pageable, books.size());
     }
 
     @Override

@@ -5,10 +5,15 @@ import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.service.BookService;
 import com.litres.bookstore.service.ReaderService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,7 +27,7 @@ import java.util.List;
 
 @Tag(
     name = "REST APIs for Books",
-    description = "REST APIs - Create Book, Get Book by id, Get All Books"
+    description = "REST APIs - Create Book, Update Book, Get Book by id, Get All Books"
 )
 @RestController
 @RequestMapping("/api/books")
@@ -37,15 +42,22 @@ public class BookController {
     }
 
     @Operation(
-        summary = "Get All Books"
+        summary = "Get All Books (by default 1st page, 10 books limit)"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
     @GetMapping
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
-        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
+    public ResponseEntity<Page<BookDTO>> getAllBooks(
+        @Parameter(description = "Page number") @RequestParam(defaultValue = "0") int page,
+        @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+        @Parameter(description = "Sort by") @RequestParam(defaultValue = "id") String sortBy,
+        @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
+        Page<BookDTO> books = bookService.getAllBooks(pageable);
+        return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @Operation(

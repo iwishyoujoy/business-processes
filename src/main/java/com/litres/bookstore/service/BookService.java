@@ -1,15 +1,14 @@
 package com.litres.bookstore.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.litres.bookstore.dto.BookDTO;
 
 @Service
 public interface BookService {
 
-    List<BookDTO> getAllBooks();
+    Page<BookDTO> getAllBooks(Pageable pageable);
 
     BookDTO createBook(BookDTO book);
 

@@ -2,6 +2,8 @@ package com.litres.bookstore.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.litres.bookstore.dto.AuthorDTO;
@@ -10,7 +12,7 @@ import com.litres.bookstore.dto.BookDTO;
 @Service
 public interface AuthorService {
 
-    List<AuthorDTO> getAllAuthors();
+    Page<AuthorDTO> getAllAuthors(Pageable pageable);
 
     AuthorDTO createAuthor(AuthorDTO author);
 
@@ -18,9 +20,9 @@ public interface AuthorService {
 
     AuthorDTO getAuthorByLogin(String login);
 
-    List<BookDTO> getBooksByAuthorId(Long authorId);
+    Page<BookDTO> getBooksByAuthorId(Long authorId, Pageable pageable);
 
-    List<BookDTO> getBooksByAuthorLogin(String login);
+    Page<BookDTO> getBooksByAuthorLogin(String login, Pageable pageable);
 
     AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO);
 

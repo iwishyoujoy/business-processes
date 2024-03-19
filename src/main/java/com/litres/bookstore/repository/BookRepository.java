@@ -1,8 +1,9 @@
 package com.litres.bookstore.repository;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,8 +13,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findById(Long id);
     
     @Query("SELECT b FROM Book b JOIN b.author a WHERE a.login = :authorLogin")
-    List<Book> findByAuthorLogin(String authorLogin);
+    Page<Book> findByAuthorLogin(String authorLogin, Pageable pageable);
 
     @Query("SELECT b FROM Book b JOIN b.author a WHERE a.id = :authorId")
-    List<Book> findByAuthorId(Long authorId);
+    Page<Book> findByAuthorId(Long authorId, Pageable pageable);
 }
