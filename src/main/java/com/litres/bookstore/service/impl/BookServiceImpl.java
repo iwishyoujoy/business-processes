@@ -1,6 +1,7 @@
 package com.litres.bookstore.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class BookServiceImpl implements BookService {
         return books.map(book -> bookMapper.mapToBookDTO(book));
     }
 
+    @Transactional
     @Override
     public BookDTO createBook(BookDTO bookDTO) {
         Long authorId = bookDTO.getAuthorId();
@@ -40,6 +42,7 @@ public class BookServiceImpl implements BookService {
             .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(authorId)));
         
         Float bookCreationCost = 100.0f;
+        
         if (author.getMoney() < bookCreationCost) {
             throw new IllegalArgumentException("Not enough money on the author's account");
         }
@@ -59,6 +62,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.mapToBookDTO(book);
     }
 
+    @Transactional
     @Override
     public BookDTO addReaderToBook(Long bookId, Long readerId) {
         Book book = bookRepository.findById(bookId)

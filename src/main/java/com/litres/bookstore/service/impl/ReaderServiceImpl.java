@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.exception.ResourceNotFoundException;
-import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.model.Reader;
 import com.litres.bookstore.repository.BookRepository;
