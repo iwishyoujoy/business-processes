@@ -1,7 +1,9 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.BookDTO;
+import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.service.BookService;
+import com.litres.bookstore.service.ReaderService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +11,12 @@ import org.springframework.http.ResponseEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 
@@ -24,9 +29,11 @@ import java.util.List;
 public class BookController {
 
     private BookService bookService;
+    private ReaderService readerService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, ReaderService readerService) {
         this.bookService = bookService;
+        this.readerService = readerService;
     }
 
     @Operation(
@@ -49,7 +56,7 @@ public class BookController {
         description = "HTTP Status 201 CREATED"
     )
     @PostMapping
-    public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
         return new ResponseEntity<>(bookService.createBook(bookDTO), HttpStatus.CREATED);
     }
 
@@ -66,11 +73,20 @@ public class BookController {
     }
 
     @Operation(
-        summary = "Add Book to Reader"
+        summary = "Add Book to Reader (considering the age restrictions)"
     )
     @PostMapping("/{bookId}/{readerId}")
     public ResponseEntity<BookDTO> addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
-        return new ResponseEntity<>(bookService.addReaderToBook(bookId, readerId), HttpStatus.CREATED);
+        BookDTO bookDTO = bookService.getBookById(bookId);
+        ReaderDTO readerDTO = readerService.getReaderById(readerId);
+
+        int readerAge = Period.between(readerDTO.getBirthDate(), LocalDate.now()).getYears();
+
+        if (readerAge < bookDTO.getAgeRestriction().getAge()) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(bookService.addReaderToBook(bookId, readerId), HttpStatus.CREATED);    
     }
 
     @Operation(
@@ -81,13 +97,13 @@ public class BookController {
         description = "HTTP Status 200 OK"
     )
     @PutMapping("/{id}")
-    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @RequestBody BookDTO bookDTO) {
+    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
         BookDTO updatedBookDTO = bookService.updateBook(id, bookDTO);
         if (updatedBookDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(updatedBookDTO, HttpStatus.OK);
-    }
+    }    
     
     @Operation(
         summary = "Delete Book by id"

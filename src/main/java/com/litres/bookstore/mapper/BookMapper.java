@@ -24,7 +24,8 @@ public class BookMapper {
             book.getDescription(),
             book.getContent(),
             book.getAuthor() != null ? book.getAuthor().getId() : null,
-            book.getPrice()
+            book.getPrice(),
+            book.getAgeRestriction()
         );
         return bookDto;
     }
@@ -37,7 +38,8 @@ public class BookMapper {
             bookDTO.getDescription(),
             bookDTO.getContent(),
             author,
-            bookDTO.getPrice()
+            bookDTO.getPrice(),
+            bookDTO.getAgeRestriction()
         );
         return book;
     }
@@ -54,6 +56,7 @@ public class BookMapper {
         if (bookDTO.getAuthorId() != null) {
             Author author = getAuthorById(bookDTO.getAuthorId());
             book.setAuthor(author);
-        }
+        };
+        book.setAgeRestriction(bookDTO.getAgeRestriction());
     }
 }

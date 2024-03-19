@@ -1,5 +1,6 @@
 package com.litres.bookstore.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,8 @@ public class Reader {
     private String surname;
     private String email;
     private Float money;
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @ManyToMany
     @JoinTable(
@@ -43,7 +46,7 @@ public class Reader {
     private List<Book> books = new ArrayList<>();
 
     public Reader(Long id, String login, String password, String name, String surname, String email,
-        Float money) {
+        Float money, LocalDate birthDate) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -51,6 +54,7 @@ public class Reader {
         this.surname = surname;
         this.email = email;
         this.money = money;
+        this.birthDate = birthDate;
     }
 
 }

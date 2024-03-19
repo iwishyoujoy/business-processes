@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,9 @@ public class Book {
     private String content;
     private Float price;
 
+    @Column(name = "age_restriction")
+    private AgeRestriction ageRestriction;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
@@ -37,12 +41,13 @@ public class Book {
     @ManyToMany(mappedBy = "books", cascade = CascadeType.ALL)
     private List<Reader> readers = new ArrayList<>();
 
-    public Book (Long id, String title, String description, String content, Author author, Float price){
+    public Book (Long id, String title, String description, String content, Author author, Float price, AgeRestriction ageRestriction){
         this.id = id;
         this.title = title;
         this.description = description;
         this.content = content;
         this.author = author;
         this.price = price;
+        this.ageRestriction = ageRestriction;
     }
 }

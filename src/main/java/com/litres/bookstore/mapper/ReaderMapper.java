@@ -16,7 +16,8 @@ public class ReaderMapper {
             reader.getName(),
             reader.getSurname(),
             reader.getEmail(),
-            reader.getMoney()
+            reader.getMoney(),
+            reader.getBirthDate()
         );
         return readerDto;
     }
@@ -29,7 +30,8 @@ public class ReaderMapper {
             readerDTO.getName(),
             readerDTO.getSurname(),
             readerDTO.getEmail(),
-            readerDTO.getMoney()
+            readerDTO.getMoney(),
+            readerDTO.getBirthDate()
         );
         return reader;
     }
@@ -41,5 +43,6 @@ public class ReaderMapper {
         reader.setSurname(readerDTO.getSurname());
         reader.setEmail(readerDTO.getEmail());
         reader.setMoney(readerDTO.getMoney());
+        reader.setBirthDate(readerDTO.getBirthDate());
     }
 }

@@ -1,5 +1,7 @@
 package com.litres.bookstore.dto;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,4 +19,5 @@ public class ReaderDTO {
     private String surname;
     private String email;
     private Float money;
+    private LocalDate birthDate;
 }
