@@ -1,0 +1,1 @@
+SELECT query_to_xml('SELECT * FROM t_user_roles', true, false, '');
