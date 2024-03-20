@@ -28,21 +28,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                    .antMatchers("/api/authors/registration", "/api/readers/registration", "/api/login").permitAll()
-                    .antMatchers("/api/authors/**").hasRole("AUTHOR")
-                    .antMatchers("/api/readers/**").hasRole("READER")
-                .and().authorizeRequests().antMatchers("/swagger-ui/**").permitAll()
-                .and().authorizeRequests().antMatchers("/v3/api-docs/**").permitAll()
-
-                .anyRequest().authenticated()
-
-                .and()
-                    .cors()
-                .and()
-                    .csrf().disable()
-                .httpBasic(withDefaults());
-
+            .authorizeRequests(requests -> requests
+                .antMatchers("/api/authors/registration", "/api/readers/registration", "/api/login").permitAll()
+                .antMatchers("/api/authors/**").hasRole("AUTHOR")
+                .antMatchers("/api/readers/**").hasRole("READER")).authorizeRequests(requests -> requests.antMatchers("/swagger-ui/**").permitAll()).authorizeRequests(requests -> requests.antMatchers("/v3/api-docs/**").permitAll()
+            .anyRequest().authenticated())
+            .cors(withDefaults())
+            .csrf(csrf -> csrf.disable())
+            .httpBasic(withDefaults());
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.litres.bookstore.mapper;
 import org.springframework.stereotype.Component;
 
 import com.litres.bookstore.dto.AuthorDTO;
-import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.model.Author;
-import com.litres.bookstore.model.Reader;
 
 @Component
 public class AuthorMapper {

@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorDTO {
-    private Long id; // кажется, он тут не нужен
+    private Long id;
     private String login;
     private String password;
     private String name;
