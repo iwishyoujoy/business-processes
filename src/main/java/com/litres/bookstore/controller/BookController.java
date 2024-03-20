@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -31,8 +31,8 @@ import java.time.Period;
 @RequestMapping("/api/books")
 public class BookController {
 
-    private BookService bookService;
-    private ReaderService readerService;
+    private final BookService bookService;
+    private final ReaderService readerService;
 
     public BookController(BookService bookService, ReaderService readerService) {
         this.bookService = bookService;

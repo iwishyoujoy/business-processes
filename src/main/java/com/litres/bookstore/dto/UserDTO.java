@@ -9,12 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorDTO {
-    private Long id; // кажется, он тут не нужен
+public class UserDTO {
     private String login;
     private String password;
-    private String name;
-    private String surname;
-    private String email;
-    private Float money;
 }

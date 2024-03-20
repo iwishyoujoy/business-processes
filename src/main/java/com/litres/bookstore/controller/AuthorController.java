@@ -3,7 +3,6 @@ package com.litres.bookstore.controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +34,7 @@ import com.litres.bookstore.dto.BookDTO;
 @RequestMapping("/api/authors")
 public class AuthorController {
 
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
     public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
@@ -58,18 +57,6 @@ public class AuthorController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
         Page<AuthorDTO> authors = authorService.getAllAuthors(pageable);
         return new ResponseEntity<>(authors, HttpStatus.OK);
-    }
-
-    @Operation(
-        summary = "Create Author"
-    )
-    @ApiResponse(
-        responseCode = "201",
-        description = "HTTP Status 201 CREATED"
-    )
-    @PostMapping
-    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO author) {
-        return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
     }
 
     @Operation(

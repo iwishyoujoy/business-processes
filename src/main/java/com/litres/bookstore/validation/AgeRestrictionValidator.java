@@ -1,8 +1,8 @@
 package com.litres.bookstore.validation;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import com.litres.bookstore.model.AgeRestriction;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import com.litres.bookstore.model.enums.AgeRestriction;
 
 public class AgeRestrictionValidator implements ConstraintValidator<ValidAgeRestriction, AgeRestriction> {
     @Override

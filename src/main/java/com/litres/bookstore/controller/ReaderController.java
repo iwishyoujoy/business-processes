@@ -34,7 +34,7 @@ import com.litres.bookstore.dto.ReaderDTO;
 @RequestMapping("/api/readers")
 public class ReaderController {
 
-    private ReaderService readerService;
+    private final ReaderService readerService;
 
     public ReaderController(ReaderService readerService) {
         this.readerService = readerService;
@@ -57,18 +57,6 @@ public class ReaderController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
         Page<ReaderDTO> readers = readerService.getAllReaders(pageable);
         return new ResponseEntity<>(readers, HttpStatus.OK);
-    }
-
-    @Operation(
-        summary = "Create Reader"
-    )
-    @ApiResponse(
-        responseCode = "201",
-        description = "HTTP Status 201 CREATED"
-    )
-    @PostMapping
-    public ResponseEntity<ReaderDTO> createReader(@RequestBody ReaderDTO readerDTO) {
-        return new ResponseEntity<>(readerService.createReader(readerDTO), HttpStatus.CREATED);
     }
 
     @Operation(

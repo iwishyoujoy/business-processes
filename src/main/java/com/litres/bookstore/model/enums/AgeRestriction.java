@@ -1,5 +1,8 @@
-package com.litres.bookstore.model;
+package com.litres.bookstore.model.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum AgeRestriction {
     NONE(0),
     SIX(6),
@@ -13,7 +16,4 @@ public enum AgeRestriction {
         this.age = age;
     }
 
-    public int getAge() {
-        return age;
-    }
 }

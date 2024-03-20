@@ -2,9 +2,8 @@ package com.litres.bookstore.dto;
 
 import lombok.Setter;
 
-import com.litres.bookstore.model.AgeRestriction;
+import com.litres.bookstore.model.enums.AgeRestriction;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +19,7 @@ public class BookDTO {
     private String content;
     private Long authorId;
     private Float price;
-    @ApiModelProperty(value = "Age restriction of the book", allowableValues = "NONE, SIX, TWELVE, SIXTEEN, EIGHTEEN")
+// TODO https://stackoverflow.com/questions/59291371/migrating-from-springfox-swagger-2-to-springdoc-open-api
+//    @Schema(value = "Age restriction of the book", allowableValues = "NONE, SIX, TWELVE, SIXTEEN, EIGHTEEN")
     private AgeRestriction ageRestriction;
 }
