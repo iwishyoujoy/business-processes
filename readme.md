@@ -22,6 +22,8 @@
 
 ## Технологии
 - Spring Boot
+- Spring Security
+- Atomikos
 - Lombok
 - Swagger - при локальном развертывании ui лежит по адресу http://localhost:8080/swagger-ui/index.html#/
 - Docker Compose
