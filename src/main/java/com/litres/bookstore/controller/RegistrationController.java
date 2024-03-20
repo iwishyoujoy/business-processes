@@ -11,6 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,11 +34,14 @@ class RegistrationController {
 
     private final UserMapper userMapper;
 
-    public RegistrationController(UserServiceImpl userService, AuthorService authorService, ReaderService readerService, UserMapper userMapper) {
+    private final AuthenticationManager authenticationManager;
+
+    public RegistrationController(UserServiceImpl userService, AuthorService authorService, ReaderService readerService, UserMapper userMapper, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authorService = authorService;
         this.readerService = readerService;
         this.userMapper = userMapper;
+        this.authenticationManager = authenticationManager;
     }
 
     @Operation(
@@ -49,7 +56,9 @@ class RegistrationController {
         if (!userService.saveUser(userMapper.mapToUser(author))) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(author.getLogin(), author.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
     }
 
@@ -65,7 +74,9 @@ class RegistrationController {
         if (!userService.saveUser(userMapper.mapToUser(reader))) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(reader.getLogin(), reader.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return new ResponseEntity<>(readerService.createReader(reader), HttpStatus.CREATED);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,6 +67,7 @@ public class BookController {
         description = "HTTP Status 201 CREATED"
     )
     @PostMapping
+    @PreAuthorize("hasRole('AUTHOR')")
     public ResponseEntity<BookDTO> createBook(@Valid @RequestBody BookDTO bookDTO) {
         return new ResponseEntity<>(bookService.createBook(bookDTO), HttpStatus.CREATED);
     }
@@ -86,6 +88,7 @@ public class BookController {
         summary = "Add Book to Reader (considering the age restrictions)"
     )
     @PostMapping("/{bookId}/{readerId}")
+    @PreAuthorize("hasRole('READER')")
     public ResponseEntity<BookDTO> addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
         BookDTO bookDTO = bookService.getBookById(bookId);
         ReaderDTO readerDTO = readerService.getReaderById(readerId);
