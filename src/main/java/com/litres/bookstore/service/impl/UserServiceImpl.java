@@ -1,5 +1,7 @@
 package com.litres.bookstore.service.impl;
 
+import com.litres.bookstore.dto.UserDTO;
+import com.litres.bookstore.exception.ResourceNotFoundException;
 import com.litres.bookstore.model.User;
 import com.litres.bookstore.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +29,8 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "login", username));
     }
 
     public User findUserById(Long userId) {
@@ -40,9 +43,9 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     public boolean saveUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
+        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
 
-        if (userFromDB != null) {
+        if (userFromDB.isPresent()) {
             return false;
         }
 
@@ -62,5 +65,13 @@ public class UserServiceImpl implements UserDetailsService {
     public List<User> usergtList(Long idMin) {
         return em.createQuery("SELECT u FROM User u WHERE u.id > :paramId", User.class)
                 .setParameter("paramId", idMin).getResultList();
+    }
+
+    public void updateUserData(String login, UserDTO userDTO) {
+        User user = userRepository.findByUsername(login)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "login", login));
+        user.setUsername(userDTO.getLogin());
+        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        userRepository.save(user);
     }
 }

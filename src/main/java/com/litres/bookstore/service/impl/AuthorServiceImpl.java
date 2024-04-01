@@ -2,10 +2,14 @@ package com.litres.bookstore.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.BookDTO;
+import com.litres.bookstore.dto.UserDTO;
 import com.litres.bookstore.model.Author;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
@@ -28,6 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
     private BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final AuthorMapper authorMapper;
+    private final UserServiceImpl userService;
 
     @Override
     public Page<AuthorDTO> getAllAuthors(Pageable pageable){
@@ -75,16 +80,14 @@ public class AuthorServiceImpl implements AuthorService {
         authorRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO) {
-        Optional<Author> authorOptional = authorRepository.findById(id);
-        if (authorOptional.isPresent()) {
-            Author author = authorOptional.get();
-            authorMapper.mapToUpdatedAuthor(authorDTO, author);
-            Author updatedAuthor = authorRepository.save(author);
-            return authorMapper.mapToAuthorDTO(updatedAuthor);
-        } else {
-            throw new ResourceNotFoundException("Author", "id", String.valueOf(id));
-        }
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Author author = authorMapper.mapToAuthor(getAuthorByLogin(userDetails.getUsername()));
+        userService.updateUserData(author.getLogin(), new UserDTO(authorDTO.getLogin(), authorDTO.getPassword()));
+        authorMapper.mapToUpdatedAuthor(authorDTO, author);
+        Author updatedAuthor = authorRepository.save(author);
+        return authorMapper.mapToAuthorDTO(updatedAuthor);
     }
 }

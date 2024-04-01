@@ -3,10 +3,14 @@ package com.litres.bookstore.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.dto.ReaderDTO;
+import com.litres.bookstore.dto.UserDTO;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.model.Reader;
@@ -31,6 +35,7 @@ public class ReaderServiceImpl implements ReaderService{
     private BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final ReaderMapper readerMapper;
+    private final UserServiceImpl userService;
 
     @Override
     public Page<ReaderDTO> getAllReaders(Pageable pageable){
@@ -40,10 +45,9 @@ public class ReaderServiceImpl implements ReaderService{
 
     @Override 
     public ReaderDTO createReader(ReaderDTO readerDTO){
-        Reader reader = AutoReaderMapper.MAPPER.mapToReader(readerDTO);
+        Reader reader = readerMapper.mapToReader(readerDTO);
         Reader savedReader = readerRepository.save(reader);
-        ReaderDTO savedReaderDTO = AutoReaderMapper.MAPPER.mapToReaderDTO(savedReader);
-        return savedReaderDTO;
+        return readerMapper.mapToReaderDTO(savedReader);
     }
 
     @Override
@@ -107,16 +111,14 @@ public class ReaderServiceImpl implements ReaderService{
         readerRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public ReaderDTO updateReader(Long id, ReaderDTO readerDTO) {
-        Optional<Reader> readerOptional = readerRepository.findById(id);
-        if (readerOptional.isPresent()) {
-            Reader reader = readerOptional.get();
-            readerMapper.mapToUpdatedReader(readerDTO, reader);
-            Reader updatedReader = readerRepository.save(reader);
-            return readerMapper.mapToReaderDTO(updatedReader);
-        } else {
-            throw new ResourceNotFoundException("Reader", "id", String.valueOf(id));
-        }
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
+        userService.updateUserData(reader.getLogin(), new UserDTO(readerDTO.getLogin(), readerDTO.getPassword()));
+        readerMapper.mapToUpdatedReader(readerDTO, reader);
+        Reader updatedReader = readerRepository.save(reader);
+        return readerMapper.mapToReaderDTO(updatedReader);
     }
 }
