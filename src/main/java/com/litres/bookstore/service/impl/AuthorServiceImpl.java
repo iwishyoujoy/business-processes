@@ -82,7 +82,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional
     @Override
-    public AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO) {
+    public AuthorDTO updateAuthor(AuthorDTO authorDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Author author = authorMapper.mapToAuthor(getAuthorByLogin(userDetails.getUsername()));
         userService.updateUserData(author.getLogin(), new UserDTO(authorDTO.getLogin(), authorDTO.getPassword()));

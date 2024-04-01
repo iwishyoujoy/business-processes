@@ -113,7 +113,7 @@ public class ReaderServiceImpl implements ReaderService{
 
     @Transactional
     @Override
-    public ReaderDTO updateReader(Long id, ReaderDTO readerDTO) {
+    public ReaderDTO updateReader(ReaderDTO readerDTO) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
         userService.updateUserData(reader.getLogin(), new UserDTO(readerDTO.getLogin(), readerDTO.getPassword()));

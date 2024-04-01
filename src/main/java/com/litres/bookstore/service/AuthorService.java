@@ -22,7 +22,7 @@ public interface AuthorService {
 
     Page<BookDTO> getBooksByAuthorLogin(String login, Pageable pageable);
 
-    AuthorDTO updateAuthor(Long id, AuthorDTO authorDTO);
+    AuthorDTO updateAuthor(AuthorDTO authorDTO);
 
     void deleteAuthorById(Long id);
 }

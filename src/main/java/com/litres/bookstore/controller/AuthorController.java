@@ -130,9 +130,9 @@ public class AuthorController {
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @PutMapping("/{id}")
-    public ResponseEntity<AuthorDTO> updateAuthorById(@PathVariable Long id, @RequestBody AuthorDTO authorDTO) {
-        AuthorDTO updatedAuthorDTO = authorService.updateAuthor(id, authorDTO);
+    @PutMapping
+    public ResponseEntity<AuthorDTO> updateAuthorById(@RequestBody AuthorDTO authorDTO) {
+        AuthorDTO updatedAuthorDTO = authorService.updateAuthor(authorDTO);
         if (updatedAuthorDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

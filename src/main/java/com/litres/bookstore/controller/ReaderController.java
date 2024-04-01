@@ -129,9 +129,9 @@ public class ReaderController {
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @PutMapping("/{id}")
-    public ResponseEntity<ReaderDTO> updateReaderById(@PathVariable Long id, @RequestBody ReaderDTO readerDTO) {
-        ReaderDTO updatedReaderDTO = readerService.updateReader(id, readerDTO);
+    @PutMapping
+    public ResponseEntity<ReaderDTO> updateReaderById(@RequestBody ReaderDTO readerDTO) {
+        ReaderDTO updatedReaderDTO = readerService.updateReader(readerDTO);
         if (updatedReaderDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
