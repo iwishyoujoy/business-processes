@@ -138,10 +138,10 @@ public class ReaderController {
     }
 
     @Operation(
-        summary = "Delete Reader by id"
+        summary = "Delete Reader account"
     )
-    @DeleteMapping("/id/{id}")
-    public void deleteReaderById(@PathVariable Long id){
-        readerService.deleteReaderById(id);
+    @DeleteMapping
+    public void deleteReaderById(){
+        readerService.deleteReader();
     }
 }
