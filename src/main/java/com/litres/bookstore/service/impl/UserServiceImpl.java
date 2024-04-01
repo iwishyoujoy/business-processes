@@ -74,4 +74,8 @@ public class UserServiceImpl implements UserDetailsService {
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         userRepository.save(user);
     }
+
+    public void deleteUserByUsername(String username) {
+        userRepository.deleteByUsername(username);
+    }
 }

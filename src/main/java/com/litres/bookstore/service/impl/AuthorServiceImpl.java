@@ -75,9 +75,13 @@ public class AuthorServiceImpl implements AuthorService {
         return bookRepository.findByAuthorId(author.getId(), pageable).map(book -> bookMapper.mapToBookDTO(book));
     }
 
+    @Transactional
     @Override
-    public void deleteAuthorById(Long id){
-        authorRepository.deleteById(id);
+    public void deleteAuthor(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AuthorDTO author = getAuthorByLogin(userDetails.getUsername());
+        authorRepository.deleteById(author.getId());
+        userService.deleteUserByUsername(author.getLogin());
     }
 
     @Transactional

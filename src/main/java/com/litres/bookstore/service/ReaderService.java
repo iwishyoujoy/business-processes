@@ -26,5 +26,5 @@ public interface ReaderService {
 
     ReaderDTO updateReader(ReaderDTO readerDTO);
 
-    void deleteReaderById(Long id);
+    void deleteReader();
 }

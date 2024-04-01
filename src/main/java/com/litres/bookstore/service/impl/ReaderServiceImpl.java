@@ -91,8 +91,11 @@ public class ReaderServiceImpl implements ReaderService{
     }
 
     @Override
-    public void deleteReaderById(Long id){
-        readerRepository.deleteById(id);
+    public void deleteReader(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
+        readerRepository.deleteById(reader.getId());
+        userService.deleteUserByUsername(reader.getLogin());
     }
 
     @Transactional

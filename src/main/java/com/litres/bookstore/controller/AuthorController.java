@@ -140,14 +140,14 @@ public class AuthorController {
     
 
     @Operation(
-        summary = "Delete Author by id"
+        summary = "Delete Author account"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @DeleteMapping("/id/{id}")
-    public void getBooksForAuthorByLogin(@PathVariable Long id) {
-        authorService.deleteAuthorById(id);
+    @DeleteMapping
+    public void deleteAuthor() {
+        authorService.deleteAuthor();
     }
 }
