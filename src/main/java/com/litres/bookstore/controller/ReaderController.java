@@ -103,34 +103,14 @@ public class ReaderController {
     }
 
     @Operation(
-        summary = "Get Books for reader by login (by default 1st page, 10 books limit)"
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "HTTP Status 200 OK"
-    )
-    @GetMapping("/login/{login}/books")
-    public ResponseEntity<Page<BookDTO>> getBooksForReaderByLogin(
-        @PathVariable String login,
-        @Parameter(description = "Page number") @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
-        @Parameter(description = "Sort by") @RequestParam(defaultValue = "id") String sortBy,
-        @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction
-    ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
-        Page<BookDTO> books = readerService.getBooksForReaderByLogin(login, pageable);
-        return new ResponseEntity<>(books, HttpStatus.OK);
-    }
-
-    @Operation(
-        summary = "Update Reader by id"
+        summary = "Update Reader"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
     @PutMapping
-    public ResponseEntity<ReaderDTO> updateReaderById(@RequestBody ReaderDTO readerDTO) {
+    public ResponseEntity<ReaderDTO> updateReader(@RequestBody ReaderDTO readerDTO) {
         ReaderDTO updatedReaderDTO = readerService.updateReader(readerDTO);
         if (updatedReaderDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

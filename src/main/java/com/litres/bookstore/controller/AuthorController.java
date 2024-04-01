@@ -104,34 +104,14 @@ public class AuthorController {
     }
 
     @Operation(
-        summary = "Get Books for Author by login (by default 1st page, 10 books limit)"
-    )
-    @ApiResponse(
-        responseCode = "200",
-        description = "HTTP Status 200 OK"
-    )
-    @GetMapping("/login/{login}/books")
-    public ResponseEntity<Page<BookDTO>> getBooksForAuthorByLogin(
-        @PathVariable String login,
-        @Parameter(description = "Page number") @RequestParam(defaultValue = "0") int page,
-        @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
-        @Parameter(description = "Sort by") @RequestParam(defaultValue = "id") String sortBy,
-        @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction
-    ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
-        Page<BookDTO> books = authorService.getBooksByAuthorLogin(login, pageable);
-        return new ResponseEntity<>(books, HttpStatus.OK);
-    }
-
-    @Operation(
-        summary = "Update Author by id"
+        summary = "Update Author"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
     @PutMapping
-    public ResponseEntity<AuthorDTO> updateAuthorById(@RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<AuthorDTO> updateAuthor(@RequestBody AuthorDTO authorDTO) {
         AuthorDTO updatedAuthorDTO = authorService.updateAuthor(authorDTO);
         if (updatedAuthorDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
