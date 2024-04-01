@@ -40,11 +40,6 @@ public class LoginController {
                     .authenticate(new UsernamePasswordAuthenticationToken(user.getLogin(), user.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            User userFromDB = (User) userService.loadUserByUsername(user.getLogin());
-            if (userFromDB == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (AuthenticationException ex) {
             System.out.println(ex.toString());
