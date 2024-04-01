@@ -18,8 +18,12 @@ import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.BookService;
 import com.litres.bookstore.mapper.BookMapper;
+import com.litres.bookstore.mapper.ReaderMapper;
+import com.litres.bookstore.exception.AgeRestrictionException;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 @Service
@@ -30,7 +34,9 @@ public class BookServiceImpl implements BookService {
     private AuthorRepository authorRepository;
     private ReaderRepository readerRepository;
     private final BookMapper bookMapper;
+    private final ReaderMapper readerMapper;
     private final AuthorServiceImpl authorService;
+    private final ReaderServiceImpl readerService;
 
     @Override
     public Page<BookDTO> getAllBooks(Pageable pageable) {
@@ -68,12 +74,19 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDTO addReaderToBook(Long bookId, Long readerId) {
+    public BookDTO addReaderToBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
             .orElseThrow(() -> new ResourceNotFoundException("Book", "id", String.valueOf(bookId)));
-        Reader reader = readerRepository.findById(readerId)
-            .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
-        
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Reader reader = readerMapper.mapToReader(readerService.getReaderByLogin(userDetails.getUsername()));
+
+        int readerAge = Period.between(reader.getBirthDate(), LocalDate.now()).getYears();
+
+        if (readerAge < book.getAgeRestriction().getAge()) {
+            throw new AgeRestrictionException("You are too young to read this book");
+        }
+
         Author author = book.getAuthor();
         Float bookCost = book.getPrice();
 

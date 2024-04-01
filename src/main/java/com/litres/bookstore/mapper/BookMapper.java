@@ -31,16 +31,21 @@ public class BookMapper {
     }
 
     public Book mapToBook(BookDTO bookDTO){
-        Author author = getAuthorById(bookDTO.getAuthorId());
         Book book = new Book(
             bookDTO.getId(),
             bookDTO.getTitle(),
             bookDTO.getDescription(),
             bookDTO.getContent(),
-            author,
+            null,
             bookDTO.getPrice(),
             bookDTO.getAgeRestriction()
         );
+    
+        if (bookDTO.getAuthorId() != null) {
+            Author author = getAuthorById(bookDTO.getAuthorId());
+            book.setAuthor(author);
+        }
+    
         return book;
     }
 

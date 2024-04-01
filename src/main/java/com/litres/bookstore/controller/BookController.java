@@ -87,19 +87,10 @@ public class BookController {
     @Operation(
         summary = "Add Book to Reader (considering the age restrictions)"
     )
-    @PostMapping("/{bookId}/{readerId}")
+    @PostMapping("/{bookId}")
     @PreAuthorize("hasRole('READER')")
-    public ResponseEntity<BookDTO> addBookToReader(@PathVariable Long bookId, @PathVariable Long readerId) {
-        BookDTO bookDTO = bookService.getBookById(bookId);
-        ReaderDTO readerDTO = readerService.getReaderById(readerId);
-
-        int readerAge = Period.between(readerDTO.getBirthDate(), LocalDate.now()).getYears();
-
-        if (readerAge < bookDTO.getAgeRestriction().getAge()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        return new ResponseEntity<>(bookService.addReaderToBook(bookId, readerId), HttpStatus.CREATED);    
+    public ResponseEntity<BookDTO> addBookToReader(@PathVariable Long bookId) {
+        return new ResponseEntity<>(bookService.addReaderToBook(bookId), HttpStatus.CREATED);    
     }
 
     @Operation(

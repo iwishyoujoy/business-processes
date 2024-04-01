@@ -16,7 +16,7 @@ public interface BookService {
 
     boolean isBookExist(Long id);
 
-    BookDTO addReaderToBook(Long bookId, Long readerId);
+    BookDTO addReaderToBook(Long bookId);
 
     BookDTO updateBook(Long id, BookDTO bookDTO);
 
