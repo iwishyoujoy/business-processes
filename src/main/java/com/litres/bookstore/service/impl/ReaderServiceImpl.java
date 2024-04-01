@@ -77,9 +77,9 @@ public class ReaderServiceImpl implements ReaderService{
     }
 
    @Override
-    public Page<BookDTO> getBooksForReaderByLogin(String readerLogin, Pageable pageable) {
-        Reader reader = readerRepository.findByLogin(readerLogin)
-            .orElseThrow(() -> new ResourceNotFoundException("Reader", "login", readerLogin));
+    public Page<BookDTO> getBooks(Pageable pageable) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
         List<Book> books = reader.getBooks();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), books.size());
@@ -90,9 +90,9 @@ public class ReaderServiceImpl implements ReaderService{
                 .map(book -> bookMapper.mapToBookDTO(book))
                 .collect(Collectors.toList()), pageable, books.size());
     }
-
+    
     @Override
-    public Page<BookDTO> getBooksForReaderById(Long readerId, Pageable pageable) {
+    public Page<BookDTO> getBooksById(Long readerId, Pageable pageable) {
         Reader reader = readerRepository.findById(readerId)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
         List<Book> books = reader.getBooks();

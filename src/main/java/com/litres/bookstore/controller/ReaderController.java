@@ -83,13 +83,32 @@ public class ReaderController {
     }
 
     @Operation(
-        summary = "Get Books for reader by id (by default 1st page, 10 books limit)"
+        summary = "Get Books for current logged Reader (by default 1st page, 10 books limit)"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @GetMapping("/id/{id}/books")
+    @GetMapping("/books")
+    public ResponseEntity<Page<BookDTO>> getBooksForReader(
+        @Parameter(description = "Page number") @RequestParam(defaultValue = "0") int page,
+        @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+        @Parameter(description = "Sort by") @RequestParam(defaultValue = "id") String sortBy,
+        @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
+        Page<BookDTO> books = readerService.getBooks(pageable);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+    @Operation(
+        summary = "Get Books for Reader by ID (by default 1st page, 10 books limit)"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/books/{id}")
     public ResponseEntity<Page<BookDTO>> getBooksForReader(
         @PathVariable Long id,
         @Parameter(description = "Page number") @RequestParam(defaultValue = "0") int page,
@@ -98,7 +117,7 @@ public class ReaderController {
         @Parameter(description = "Sort direction") @RequestParam(defaultValue = "asc") String direction
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
-        Page<BookDTO> books = readerService.getBooksForReaderById(id, pageable);
+        Page<BookDTO> books = readerService.getBooksById(id, pageable);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 

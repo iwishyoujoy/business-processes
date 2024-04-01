@@ -18,9 +18,9 @@ public interface AuthorService {
 
     AuthorDTO getAuthorByLogin(String login);
 
-    Page<BookDTO> getBooksByAuthorId(Long authorId, Pageable pageable);
+    Page<BookDTO> getBooks(Pageable pageable);
 
-    Page<BookDTO> getBooksByAuthorLogin(String login, Pageable pageable);
+    Page<BookDTO> getBooksById(Long authorId, Pageable pageable);
 
     AuthorDTO updateAuthor(AuthorDTO authorDTO);
 

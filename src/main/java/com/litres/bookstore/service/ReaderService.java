@@ -18,9 +18,9 @@ public interface ReaderService {
 
     ReaderDTO getReaderByLogin(String login);
 
-    Page<BookDTO> getBooksForReaderByLogin(String readerLogin, Pageable pageable);
+    Page<BookDTO> getBooks(Pageable pageable);
 
-    Page<BookDTO> getBooksForReaderById(Long readerId, Pageable pageable);
+    Page<BookDTO> getBooksById(Long readerId, Pageable pageable);
 
     void addBookToReader(String readerLogin, Long bookId);
 

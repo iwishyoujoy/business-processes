@@ -62,16 +62,16 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Page<BookDTO> getBooksByAuthorId(Long authorId, Pageable pageable) {
-        Author author = authorRepository.findById(authorId)
-            .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(authorId)));
+    public Page<BookDTO> getBooks(Pageable pageable) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Author author = authorMapper.mapToAuthor(getAuthorByLogin(userDetails.getUsername()));
         return bookRepository.findByAuthorId(author.getId(), pageable).map(book -> bookMapper.mapToBookDTO(book));
     }
 
     @Override
-    public Page<BookDTO> getBooksByAuthorLogin(String login, Pageable pageable) {
-        Author author = authorRepository.findByLogin(login)
-            .orElseThrow(() -> new ResourceNotFoundException("Author", "login", login));
+    public Page<BookDTO> getBooksById(Long authorId, Pageable pageable) {
+        Author author = authorRepository.findById(authorId)
+            .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(authorId)));
         return bookRepository.findByAuthorId(author.getId(), pageable).map(book -> bookMapper.mapToBookDTO(book));
     }
 
