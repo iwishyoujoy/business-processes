@@ -109,7 +109,7 @@ public class ReaderController {
         description = "HTTP Status 200 OK"
     )
     @GetMapping("/books/{id}")
-    public ResponseEntity<Page<BookDTO>> getBooksForReader(
+    public ResponseEntity<Page<BookDTO>> getBooksForReaderById(
         @PathVariable Long id,
         @Parameter(description = "Page number") @RequestParam(defaultValue = "0") int page,
         @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,

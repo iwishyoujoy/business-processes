@@ -80,30 +80,14 @@ public class ReaderServiceImpl implements ReaderService{
     public Page<BookDTO> getBooks(Pageable pageable) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
-        List<Book> books = reader.getBooks();
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), books.size());
-        if (start >= end) {
-            return Page.empty();
-        }
-        return new PageImpl<>(books.subList(start, end).stream()
-                .map(book -> bookMapper.mapToBookDTO(book))
-                .collect(Collectors.toList()), pageable, books.size());
+        return bookRepository.findByReaderId(reader.getId(), pageable).map(book -> bookMapper.mapToBookDTO(book));
     }
     
     @Override
     public Page<BookDTO> getBooksById(Long readerId, Pageable pageable) {
         Reader reader = readerRepository.findById(readerId)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "id", String.valueOf(readerId)));
-        List<Book> books = reader.getBooks();
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), books.size());
-        if (start >= end) {
-            return Page.empty();
-        }
-        return new PageImpl<>(books.subList(start, end).stream()
-                .map(book -> bookMapper.mapToBookDTO(book))
-                .collect(Collectors.toList()), pageable, books.size());
+        return bookRepository.findByReaderId(reader.getId(), pageable).map(book -> bookMapper.mapToBookDTO(book));
     }
 
     @Override
