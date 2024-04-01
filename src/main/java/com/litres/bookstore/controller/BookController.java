@@ -110,6 +110,7 @@ public class BookController {
         description = "HTTP Status 200 OK"
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
     public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
         BookDTO updatedBookDTO = bookService.updateBook(id, bookDTO);
         if (updatedBookDTO == null) {
@@ -122,7 +123,12 @@ public class BookController {
         summary = "Delete Book by id"
     )
     @DeleteMapping("/{id}")
-    public void deleteBookById(@PathVariable Long id){
+    @PreAuthorize("hasRole('AUTHOR')")
+    public ResponseEntity<String> deleteBookById(@PathVariable Long id){
+        if (!bookService.isBookExist(id)) {
+            return new ResponseEntity<String>("Couldn't find a book with this ID", HttpStatus.NOT_FOUND);
+        }
         bookService.deleteBookById(id);
+        return new ResponseEntity<String>("Book was deleted successfully", HttpStatus.OK);
     }
 }

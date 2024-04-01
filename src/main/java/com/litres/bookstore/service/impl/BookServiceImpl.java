@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import lombok.AllArgsConstructor;
 
 import com.litres.bookstore.dto.BookDTO;
@@ -27,6 +30,7 @@ public class BookServiceImpl implements BookService {
     private AuthorRepository authorRepository;
     private ReaderRepository readerRepository;
     private final BookMapper bookMapper;
+    private final AuthorServiceImpl authorService;
 
     @Override
     public Page<BookDTO> getAllBooks(Pageable pageable) {
@@ -91,19 +95,45 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBookById(Long id){
+        Book book = bookRepository.getById(id);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long authorId = authorService.getAuthorByLogin(userDetails.getUsername()).getId();
+
+        if (!book.getAuthor().getId().equals(authorId)) {
+            throw new IllegalArgumentException("You do not have permission to delete this book");
+        }
+
         bookRepository.deleteById(id);
     }
 
     @Override
     public BookDTO updateBook(Long id, BookDTO bookDTO) {
         Optional<Book> bookOptional = bookRepository.findById(id);
+
         if (bookOptional.isPresent()) {
             Book book = bookOptional.get();
+
+            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Long authorId = authorService.getAuthorByLogin(userDetails.getUsername()).getId();
+    
+            if (!book.getAuthor().getId().equals(authorId)) {
+                throw new IllegalArgumentException("You do not have permission to update this book");
+            }
+
             bookMapper.mapToUpdatedBook(bookDTO, book);
             Book updatedBook = bookRepository.save(book);
             return bookMapper.mapToBookDTO(updatedBook);
         } else {
             throw new ResourceNotFoundException("Book", "id", String.valueOf(id));
         }
+    }
+
+    @Override
+    public boolean isBookExist(Long id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()) {
+            return true;
+        }
+        return false;
     }
 }
