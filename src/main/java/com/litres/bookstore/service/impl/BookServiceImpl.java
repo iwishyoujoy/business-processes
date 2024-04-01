@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 
+import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
@@ -17,6 +18,7 @@ import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.BookService;
+import com.litres.bookstore.mapper.AuthorMapper;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.mapper.ReaderMapper;
 import com.litres.bookstore.exception.AgeRestrictionException;
@@ -35,6 +37,7 @@ public class BookServiceImpl implements BookService {
     private ReaderRepository readerRepository;
     private final BookMapper bookMapper;
     private final ReaderMapper readerMapper;
+    private final AuthorMapper authorMapper;
     private final AuthorServiceImpl authorService;
     private final ReaderServiceImpl readerService;
 
@@ -47,10 +50,9 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public BookDTO createBook(BookDTO bookDTO) {
-        Long authorId = bookDTO.getAuthorId();
-        Author author = authorRepository.findById(authorId)
-            .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(authorId)));
-        
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Author author = authorMapper.mapToAuthor(authorService.getAuthorByLogin(userDetails.getUsername()));
+
         Float bookCreationCost = 100.0f;
         
         if (author.getMoney() < bookCreationCost) {
@@ -59,6 +61,8 @@ public class BookServiceImpl implements BookService {
 
         author.setMoney(author.getMoney() - bookCreationCost);
         authorRepository.save(author);
+        
+        bookDTO.setAuthorId(author.getId());
         Book book = bookMapper.mapToBook(bookDTO);
         book.setAuthor(author);
         Book savedBook = bookRepository.save(book);
