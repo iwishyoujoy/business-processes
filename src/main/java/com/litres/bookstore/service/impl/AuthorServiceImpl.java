@@ -22,6 +22,7 @@ import com.litres.bookstore.mapper.AutoAuthorMapper;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -86,12 +87,44 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional
     @Override
-    public AuthorDTO updateAuthor(AuthorDTO authorDTO) {
+    public Optional<AuthorDTO> updateAuthor(Map<String, Object> updates) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Author author = authorMapper.mapToAuthor(getAuthorByLogin(userDetails.getUsername()));
-        userService.updateUserData(author.getLogin(), new UserDTO(authorDTO.getLogin(), authorDTO.getPassword()));
-        authorMapper.mapToUpdatedAuthor(authorDTO, author);
+        
+        if (updates.containsKey("login")){
+            userService.updateUserData(author.getLogin(), new UserDTO((String) updates.get("login"), author.getPassword()));
+            author.setLogin((String) updates.get("login"));
+        }
+
+        if (updates.containsKey("password")){
+            userService.updateUserData(author.getLogin(), new UserDTO(author.getPassword(), (String) updates.get("password")));
+            author.setPassword((String) updates.get("password"));
+        }
+
+        if (updates.containsKey("name")){
+            author.setName((String) updates.get("name"));
+        }
+
+        if (updates.containsKey("surname")){
+            author.setSurname((String) updates.get("surname"));
+        }
+
+        if (updates.containsKey("email")){
+            author.setEmail((String) updates.get("email"));
+        }
+
+        if (updates.containsKey("money")) {
+            Object moneyObject = updates.get("money");
+            if (moneyObject instanceof Integer) {
+                author.setMoney(Float.valueOf((Integer) moneyObject));
+            } else if (moneyObject instanceof Float) {
+                author.setMoney((Float) moneyObject);
+            } else {
+                throw new IllegalArgumentException("Money must be a number");
+            }
+        }
+
         Author updatedAuthor = authorRepository.save(author);
-        return authorMapper.mapToAuthorDTO(updatedAuthor);
+        return Optional.of(authorMapper.mapToAuthorDTO(updatedAuthor));
     }
 }

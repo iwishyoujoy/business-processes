@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.litres.bookstore.service.AuthorService;
 
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -130,12 +132,10 @@ public class AuthorController {
         description = "HTTP Status 200 OK"
     )
     @PutMapping
-    public ResponseEntity<AuthorDTO> updateAuthor(@RequestBody AuthorDTO authorDTO) {
-        AuthorDTO updatedAuthorDTO = authorService.updateAuthor(authorDTO);
-        if (updatedAuthorDTO == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(updatedAuthorDTO, HttpStatus.OK);
+    public ResponseEntity<AuthorDTO> updateAuthor(@RequestBody Map<String, Object> updates) {
+        return authorService.updateAuthor(updates)
+            .map(authorDTO -> new ResponseEntity<>(authorDTO, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
 

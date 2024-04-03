@@ -1,5 +1,8 @@
 package com.litres.bookstore.service;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,7 @@ public interface AuthorService {
 
     Page<BookDTO> getBooksById(Long authorId, Pageable pageable);
 
-    AuthorDTO updateAuthor(AuthorDTO authorDTO);
+    Optional<AuthorDTO> updateAuthor(Map<String, Object> updates);
 
     void deleteAuthor();
 }
