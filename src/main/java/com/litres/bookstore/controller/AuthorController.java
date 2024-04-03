@@ -2,6 +2,7 @@ package com.litres.bookstore.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -125,13 +126,13 @@ public class AuthorController {
     }
 
     @Operation(
-        summary = "Update Author"
+        summary = "Update Author (can be partial)"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<AuthorDTO> updateAuthor(@RequestBody Map<String, Object> updates) {
         return authorService.updateAuthor(updates)
             .map(authorDTO -> new ResponseEntity<>(authorDTO, HttpStatus.OK))

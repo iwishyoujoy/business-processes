@@ -95,7 +95,7 @@ public class BookController {
     }
 
     @Operation(
-        summary = "Update Book by id"
+        summary = "Update Book by id (can be partial)"
     )
     @ApiResponse(
         responseCode = "200",

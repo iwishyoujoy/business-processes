@@ -1,5 +1,8 @@
 package com.litres.bookstore.service;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +27,7 @@ public interface ReaderService {
 
     void addBookToReader(String readerLogin, Long bookId);
 
-    ReaderDTO updateReader(ReaderDTO readerDTO);
+    Optional<ReaderDTO> updateReader(Map<String, Object> updates);
 
     void deleteReader();
 }

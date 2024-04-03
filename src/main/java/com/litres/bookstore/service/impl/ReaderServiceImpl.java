@@ -1,5 +1,6 @@
 package com.litres.bookstore.service.impl;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,9 @@ import com.litres.bookstore.mapper.ReaderMapper;
 import lombok.AllArgsConstructor;
 
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -100,12 +103,54 @@ public class ReaderServiceImpl implements ReaderService{
 
     @Transactional
     @Override
-    public ReaderDTO updateReader(ReaderDTO readerDTO) {
+    public Optional<ReaderDTO> updateReader(Map<String, Object> updates) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
-        userService.updateUserData(reader.getLogin(), new UserDTO(readerDTO.getLogin(), readerDTO.getPassword()));
-        readerMapper.mapToUpdatedReader(readerDTO, reader);
+        
+        if (updates.containsKey("login")){
+            userService.updateUserData(reader.getLogin(), new UserDTO((String) updates.get("login"), reader.getPassword()));
+            reader.setLogin((String) updates.get("login"));
+        }
+
+        if (updates.containsKey("password")){
+            userService.updateUserData(reader.getLogin(), new UserDTO(reader.getPassword(), (String) updates.get("password")));
+            reader.setPassword((String) updates.get("password"));
+        }
+
+        if (updates.containsKey("name")){
+            reader.setName((String) updates.get("name"));
+        }
+
+        if (updates.containsKey("surname")){
+            reader.setSurname((String) updates.get("surname"));
+        }
+
+        if (updates.containsKey("email")){
+            reader.setEmail((String) updates.get("email"));
+        }
+
+        if (updates.containsKey("money")) {
+            Object moneyObject = updates.get("money");
+            if (moneyObject instanceof Integer) {
+                reader.setMoney(Float.valueOf((Integer) moneyObject));
+            } else if (moneyObject instanceof Float) {
+                reader.setMoney((Float) moneyObject);
+            } else {
+                throw new IllegalArgumentException("Money must be a number");
+            }
+        }
+
+        if (updates.containsKey("birthDate")) {
+            Object birthObject = updates.get("birthDate");
+            try {
+                reader.setBirthDate((LocalDate) birthObject);
+            }
+            catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Birth date should be in format YYYY-MM-DD");
+            }
+        }
+
         Reader updatedReader = readerRepository.save(reader);
-        return readerMapper.mapToReaderDTO(updatedReader);
+        return Optional.of(readerMapper.mapToReaderDTO(updatedReader));
     }
 }

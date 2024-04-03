@@ -2,12 +2,16 @@ package com.litres.bookstore.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -122,19 +126,17 @@ public class ReaderController {
     }
 
     @Operation(
-        summary = "Update Reader"
+        summary = "Update Reader (can be partial)"
     )
     @ApiResponse(
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @PutMapping
-    public ResponseEntity<ReaderDTO> updateReader(@RequestBody ReaderDTO readerDTO) {
-        ReaderDTO updatedReaderDTO = readerService.updateReader(readerDTO);
-        if (updatedReaderDTO == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(updatedReaderDTO, HttpStatus.OK);
+    @PatchMapping
+    public ResponseEntity<ReaderDTO> updateReader(@RequestBody Map<String, Object> updates) {
+        return readerService.updateReader(updates)
+            .map(readerDTO -> new ResponseEntity<>(readerDTO, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Operation(
