@@ -32,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests(requests -> requests
                 .antMatchers("/api/authors/registration", "/api/readers/registration", "/api/login").permitAll()
+                .antMatchers("/api/books").permitAll()
                 .antMatchers("/api/authors/**").hasRole("AUTHOR")
                 .antMatchers("/api/readers/**").hasRole("READER")).authorizeRequests(requests -> requests.antMatchers("/swagger-ui/**").permitAll()).authorizeRequests(requests -> requests.antMatchers("/v3/api-docs/**").permitAll()
             .anyRequest().authenticated())
