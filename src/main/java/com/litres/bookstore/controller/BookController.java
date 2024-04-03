@@ -22,6 +22,7 @@ import javax.validation.Valid;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Map;
 
 
 @Tag(
@@ -100,14 +101,12 @@ public class BookController {
         responseCode = "200",
         description = "HTTP Status 200 OK"
     )
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @PreAuthorize("hasRole('AUTHOR')")
-    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @Valid @RequestBody BookDTO bookDTO) {
-        BookDTO updatedBookDTO = bookService.updateBook(id, bookDTO);
-        if (updatedBookDTO == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(updatedBookDTO, HttpStatus.OK);
+    public ResponseEntity<BookDTO> updateBookById(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        return bookService.updateBook(id, updates)
+            .map(bookDTO -> new ResponseEntity<>(bookDTO, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }    
     
     @Operation(

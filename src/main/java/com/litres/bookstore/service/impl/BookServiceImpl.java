@@ -9,11 +9,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 
-import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.model.Reader;
+import com.litres.bookstore.model.enums.AgeRestriction;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
@@ -26,6 +26,7 @@ import com.litres.bookstore.exception.ResourceNotFoundException;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -124,9 +125,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO updateBook(Long id, BookDTO bookDTO) {
+    public Optional<BookDTO> updateBook(Long id, Map<String, Object> updates) {
         Optional<Book> bookOptional = bookRepository.findById(id);
-
         if (bookOptional.isPresent()) {
             Book book = bookOptional.get();
 
@@ -137,11 +137,43 @@ public class BookServiceImpl implements BookService {
                 throw new IllegalArgumentException("You do not have permission to update this book");
             }
 
-            bookMapper.mapToUpdatedBook(bookDTO, book);
+            if (updates.containsKey("title")) {
+                book.setTitle((String) updates.get("title"));
+            }
+
+            if (updates.containsKey("description")) {
+                book.setDescription((String) updates.get("description"));
+            }
+
+            if (updates.containsKey("content")) {
+                book.setContent((String) updates.get("content"));
+            }
+
+            if (updates.containsKey("price")) {
+                Object priceObject = updates.get("price");
+                if (priceObject instanceof Integer) {
+                    book.setPrice(Float.valueOf((Integer) priceObject));
+                } else if (priceObject instanceof Float) {
+                    book.setPrice((Float) priceObject);
+                } else {
+                    throw new IllegalArgumentException("Price must be a number");
+                }
+            }
+
+            if (updates.containsKey("ageRestriction")) {
+                String ageRestrictionString = (String) updates.get("ageRestriction");
+                try {
+                    AgeRestriction ageRestriction = AgeRestriction.valueOf(ageRestrictionString);
+                    book.setAgeRestriction(ageRestriction);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Invalid age restriction value: " + ageRestrictionString);
+                }
+            }
+
             Book updatedBook = bookRepository.save(book);
-            return bookMapper.mapToBookDTO(updatedBook);
+            return Optional.of(bookMapper.mapToBookDTO(updatedBook));
         } else {
-            throw new ResourceNotFoundException("Book", "id", String.valueOf(id));
+            return Optional.empty();
         }
     }
 
