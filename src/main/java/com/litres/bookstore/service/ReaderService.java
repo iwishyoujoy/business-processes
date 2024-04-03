@@ -17,6 +17,8 @@ public interface ReaderService {
 
     ReaderDTO createReader(ReaderDTO reader);
 
+    ReaderDTO getLoggedReader();
+
     ReaderDTO getReaderById(Long id);
 
     ReaderDTO getReaderByLogin(String login);

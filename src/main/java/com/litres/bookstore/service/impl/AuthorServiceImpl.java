@@ -127,4 +127,13 @@ public class AuthorServiceImpl implements AuthorService {
         Author updatedAuthor = authorRepository.save(author);
         return Optional.of(authorMapper.mapToAuthorDTO(updatedAuthor));
     }
+
+    @Override
+    public AuthorDTO getLoggedAuthor() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long id = getAuthorByLogin(userDetails.getUsername()).getId();
+        Author author = authorRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(id)));
+        return authorMapper.mapToAuthorDTO(author);
+    }
 }

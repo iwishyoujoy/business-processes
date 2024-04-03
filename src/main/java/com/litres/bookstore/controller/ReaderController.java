@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +59,18 @@ public class ReaderController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy));
         Page<ReaderDTO> readers = readerService.getAllReaders(pageable);
         return new ResponseEntity<>(readers, HttpStatus.OK);
+    }
+
+    @Operation(
+        summary = "Get logged Reader"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/me")
+    public ResponseEntity<ReaderDTO> getLoggedReader() {
+        return new ResponseEntity<>(readerService.getLoggedReader(), HttpStatus.OK);
     }
 
     @Operation(

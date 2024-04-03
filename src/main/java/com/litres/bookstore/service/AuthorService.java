@@ -17,6 +17,8 @@ public interface AuthorService {
 
     AuthorDTO createAuthor(AuthorDTO author);
 
+    AuthorDTO getLoggedAuthor();
+
     AuthorDTO getAuthorById(Long id);
 
     AuthorDTO getAuthorByLogin(String login);
