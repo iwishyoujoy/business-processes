@@ -1,7 +1,6 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.UserDTO;
-import com.litres.bookstore.model.User;
 import com.litres.bookstore.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

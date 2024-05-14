@@ -1,7 +1,6 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.BookDTO;
-import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.service.BookService;
 import com.litres.bookstore.service.ReaderService;
 
@@ -20,8 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.Map;
 
 

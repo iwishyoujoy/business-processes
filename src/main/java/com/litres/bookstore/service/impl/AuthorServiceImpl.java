@@ -18,7 +18,6 @@ import com.litres.bookstore.service.AuthorService;
 import lombok.AllArgsConstructor;
 
 import com.litres.bookstore.mapper.AuthorMapper;
-import com.litres.bookstore.mapper.AutoAuthorMapper;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
@@ -38,28 +37,28 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Page<AuthorDTO> getAllAuthors(Pageable pageable){
         Page<Author> authors = authorRepository.findAll(pageable);
-        return authors.map(AutoAuthorMapper.MAPPER::mapToAuthorDTO);
+        return authors.map((author) -> authorMapper.mapToAuthorDTO(author));
     }
 
     @Override 
     public AuthorDTO createAuthor(AuthorDTO authorDTO){
-        Author author = AutoAuthorMapper.MAPPER.mapToAuthor(authorDTO);
+        Author author = authorMapper.mapToAuthor(authorDTO);
         Author savedAuthor = authorRepository.save(author);
-        return AutoAuthorMapper.MAPPER.mapToAuthorDTO(savedAuthor);
+        return authorMapper.mapToAuthorDTO(savedAuthor);
     }
 
     @Override
     public AuthorDTO getAuthorById(Long id){
         Author author = authorRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Author", "id", String.valueOf(id)));
-        return AutoAuthorMapper.MAPPER.mapToAuthorDTO(author);
+        return authorMapper.mapToAuthorDTO(author);
     }
 
     @Override
     public AuthorDTO getAuthorByLogin(String login){
         Author author = authorRepository.findByLogin(login)
             .orElseThrow(() -> new ResourceNotFoundException("Author", "login", login));
-        return AutoAuthorMapper.MAPPER.mapToAuthorDTO(author);
+        return authorMapper.mapToAuthorDTO(author);
     }
 
     @Override

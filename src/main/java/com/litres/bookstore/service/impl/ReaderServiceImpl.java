@@ -1,8 +1,6 @@
 package com.litres.bookstore.service.impl;
 
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,21 +11,17 @@ import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.dto.UserDTO;
 import com.litres.bookstore.exception.ResourceNotFoundException;
-import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.model.Reader;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.ReaderService;
-import com.litres.bookstore.mapper.AutoReaderMapper;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.mapper.ReaderMapper;
 
 import lombok.AllArgsConstructor;
 
-import java.util.stream.Collectors;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,7 +38,7 @@ public class ReaderServiceImpl implements ReaderService{
     @Override
     public Page<ReaderDTO> getAllReaders(Pageable pageable){
         Page<Reader> readers = readerRepository.findAll(pageable);
-        return readers.map((reader) -> AutoReaderMapper.MAPPER.mapToReaderDTO(reader));
+        return readers.map((reader) -> readerMapper.mapToReaderDTO(reader));
     }
 
     @Override 
@@ -59,14 +53,14 @@ public class ReaderServiceImpl implements ReaderService{
         Reader reader = readerRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("Reader", "id", String.valueOf(id))
         );
-        return AutoReaderMapper.MAPPER.mapToReaderDTO(reader);
+        return readerMapper.mapToReaderDTO(reader);
     }
 
     @Override
     public ReaderDTO getReaderByLogin(String login){
         Reader reader = readerRepository.findByLogin(login)
             .orElseThrow(() -> new ResourceNotFoundException("Reader", "login", login));
-        return AutoReaderMapper.MAPPER.mapToReaderDTO(reader);
+        return readerMapper.mapToReaderDTO(reader);
     }
 
     @Override
