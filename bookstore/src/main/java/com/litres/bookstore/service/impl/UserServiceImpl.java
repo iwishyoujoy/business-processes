@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -75,6 +76,7 @@ public class UserServiceImpl implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUserByUsername(String username) {
         userRepository.deleteByUsername(username);
     }

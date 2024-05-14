@@ -1,10 +1,12 @@
 package com.litres.bookstore.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.litres.bookstore.dto.AuthorDTO;
@@ -19,6 +21,7 @@ import lombok.AllArgsConstructor;
 
 import com.litres.bookstore.mapper.AuthorMapper;
 import com.litres.bookstore.mapper.BookMapper;
+import com.litres.bookstore.messaging.MessageSender;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 
 import java.util.Map;
@@ -28,6 +31,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
+    @Autowired
+    private MessageSender messageSender;
     private AuthorRepository authorRepository;
     private BookRepository bookRepository;
     private final BookMapper bookMapper;
@@ -44,6 +49,9 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO createAuthor(AuthorDTO authorDTO){
         Author author = authorMapper.mapToAuthor(authorDTO);
         Author savedAuthor = authorRepository.save(author);
+
+        messageSender.sendCreateMessage(author.getId(), author.getMoney());
+
         return authorMapper.mapToAuthorDTO(savedAuthor);
     }
 
@@ -76,12 +84,23 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Transactional
-    @Override
-    public void deleteAuthor(){
+    public AuthorDTO deleteAuthorInternal() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AuthorDTO author = getAuthorByLogin(userDetails.getUsername());
         authorRepository.deleteById(author.getId());
         userService.deleteUserByUsername(author.getLogin());
+        return author;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendDeleteMessageAfterDeletion(Long authorId) {
+        messageSender.sendDeleteMessage(authorId);
+    }
+
+    @Override
+    public void deleteAuthor() {
+        AuthorDTO author = deleteAuthorInternal();
+        sendDeleteMessageAfterDeletion(author.getId());
     }
 
     @Transactional

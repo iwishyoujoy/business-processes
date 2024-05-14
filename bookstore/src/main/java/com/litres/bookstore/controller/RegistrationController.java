@@ -65,7 +65,6 @@ class RegistrationController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(author.getLogin(), author.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        messageSender.sendMessage("author");
         return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
     }
 
