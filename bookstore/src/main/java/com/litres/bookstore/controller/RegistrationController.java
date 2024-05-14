@@ -3,12 +3,15 @@ package com.litres.bookstore.controller;
 import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.mapper.UserMapper;
+import com.litres.bookstore.messaging.MessageSender;
 import com.litres.bookstore.service.AuthorService;
 import com.litres.bookstore.service.ReaderService;
 import com.litres.bookstore.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 )
 @RestController
 class RegistrationController {
+
+    @Autowired    
+    private MessageSender messageSender;    
 
     private final UserServiceImpl userService;
 
@@ -59,6 +65,7 @@ class RegistrationController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(author.getLogin(), author.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        messageSender.sendMessage("author");
         return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
     }
 
