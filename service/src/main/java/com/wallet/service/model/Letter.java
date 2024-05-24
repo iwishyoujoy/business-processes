@@ -1,22 +1,18 @@
 package com.wallet.service.model;
 
 import java.io.Serializable;
-
-import com.wallet.service.enums.MessageTypes;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Message implements Serializable{
-    private MessageTypes type;
-    private Long authorId;
-    private Long readerId;
-    private Float money;
+public class Letter implements Serializable {
+    private String name;
+    private String subject;
+    private String html = "";
 }
 

@@ -3,7 +3,8 @@ package com.litres.bookstore.controller;
 import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.ReaderDTO;
 import com.litres.bookstore.mapper.UserMapper;
-import com.litres.bookstore.messaging.MessageSender;
+import com.litres.bookstore.messaging.EmailGateway;
+import com.litres.bookstore.messaging.Letter;
 import com.litres.bookstore.service.AuthorService;
 import com.litres.bookstore.service.ReaderService;
 import com.litres.bookstore.service.impl.UserServiceImpl;
@@ -27,10 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
         description = "REST APIs - Registration Author, Registration Reader"
 )
 @RestController
-class RegistrationController {
-
-    @Autowired    
-    private MessageSender messageSender;    
+class RegistrationController {   
 
     private final UserServiceImpl userService;
 
@@ -42,12 +40,16 @@ class RegistrationController {
 
     private final AuthenticationManager authenticationManager;
 
+    @Autowired
+    private final EmailGateway emailGateway;
+
     public RegistrationController(UserServiceImpl userService, AuthorService authorService, ReaderService readerService, UserMapper userMapper, AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.authorService = authorService;
         this.readerService = readerService;
         this.userMapper = userMapper;
         this.authenticationManager = authenticationManager;
+        this.emailGateway = new EmailGateway();
     }
 
     @Operation(
@@ -65,6 +67,10 @@ class RegistrationController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(author.getLogin(), author.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Letter letter = new Letter("Welcome!", "Nice to see you in our team!", "You've just registered as author on Litres!");
+        emailGateway.sendEmail(author.getEmail(), letter);
+
         return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
     }
 
@@ -83,6 +89,10 @@ class RegistrationController {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(reader.getLogin(), reader.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Letter letter = new Letter("Welcome!", "Nice to see you here!", "You've just registered as reader on Litres!");
+        emailGateway.sendEmail(reader.getEmail(), letter);
+
         return new ResponseEntity<>(readerService.createReader(reader), HttpStatus.CREATED);
     }
 

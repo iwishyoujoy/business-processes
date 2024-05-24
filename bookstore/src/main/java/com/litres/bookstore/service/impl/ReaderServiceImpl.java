@@ -103,12 +103,12 @@ public class ReaderServiceImpl implements ReaderService{
         Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
         
         if (updates.containsKey("login")){
-            userService.updateUserData(reader.getLogin(), new UserDTO((String) updates.get("login"), reader.getPassword()));
+            userService.updateUserData(reader.getLogin(), new UserDTO((String) updates.get("login"), reader.getEmail(), reader.getPassword()));
             reader.setLogin((String) updates.get("login"));
         }
 
         if (updates.containsKey("password")){
-            userService.updateUserData(reader.getLogin(), new UserDTO(reader.getPassword(), (String) updates.get("password")));
+            userService.updateUserData(reader.getLogin(), new UserDTO(reader.getLogin(), reader.getEmail(), (String) updates.get("password")));
             reader.setPassword((String) updates.get("password"));
         }
 
@@ -121,6 +121,7 @@ public class ReaderServiceImpl implements ReaderService{
         }
 
         if (updates.containsKey("email")){
+            userService.updateUserData(reader.getLogin(), new UserDTO(reader.getLogin(), (String) updates.get("email"), reader.getPassword()));
             reader.setEmail((String) updates.get("email"));
         }
 

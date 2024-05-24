@@ -13,6 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "t_user")
+@Getter
 public class User implements UserDetails {
     @Getter
     @Id
@@ -20,6 +21,7 @@ public class User implements UserDetails {
     private Long id;
     @Size(min=2, message = "Не меньше 5 знаков")
     private String username;
+    private String email;
     @Size(min=2, message = "Не меньше 5 знаков")
     private String password;
     @Getter
@@ -29,9 +31,10 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String username, String password, Set<Role> roles) {
+    public User(Long id, String username, String email, String password, Set<Role> roles) {
         this.id = id;
         this.username = username;
+        this.email = email;
         this.password = password;
         this.roles = roles;
     }
@@ -70,5 +73,4 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-
 }

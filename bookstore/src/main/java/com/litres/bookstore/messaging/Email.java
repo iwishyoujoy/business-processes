@@ -1,5 +1,6 @@
-package com.litres.bookstore.dto;
+package com.litres.bookstore.messaging;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
-    private String login;
-    private String email;
-    private String password;
+public class Email implements Serializable {
+    private String to;
+    private Letter letter;
 }

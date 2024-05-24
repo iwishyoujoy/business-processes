@@ -1,9 +1,12 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.BookDTO;
+import com.litres.bookstore.messaging.EmailGateway;
+import com.litres.bookstore.messaging.Letter;
 import com.litres.bookstore.service.BookService;
 import com.litres.bookstore.service.ReaderService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +24,6 @@ import javax.validation.Valid;
 
 import java.util.Map;
 
-
 @Tag(
     name = "REST APIs for Books",
     description = "REST APIs - Create Book, Update Book, Get Book by id, Get All Books"
@@ -31,11 +33,9 @@ import java.util.Map;
 public class BookController {
 
     private final BookService bookService;
-    private final ReaderService readerService;
 
-    public BookController(BookService bookService, ReaderService readerService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.readerService = readerService;
     }
 
     @Operation(

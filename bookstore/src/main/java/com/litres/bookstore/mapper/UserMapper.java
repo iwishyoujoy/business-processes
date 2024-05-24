@@ -17,6 +17,7 @@ public class UserMapper {
         User user = new User(
                 authorDTO.getId(),
                 authorDTO.getLogin(),
+                authorDTO.getEmail(),
                 authorDTO.getPassword(),
                 Collections.singleton(new Role(UserRole.ROLE_AUTHOR.getId(), UserRole.ROLE_AUTHOR.name()))
         );
@@ -27,6 +28,7 @@ public class UserMapper {
         User user = new User(
                 readerDTO.getId(),
                 readerDTO.getLogin(),
+                readerDTO.getEmail(),
                 readerDTO.getPassword(),
                 Collections.singleton(new Role(UserRole.ROLE_READER.getId(), UserRole.ROLE_READER.name()))
         );
@@ -37,6 +39,7 @@ public class UserMapper {
         User user = new User(
                 0L,
                 userDTO.getLogin(),
+                userDTO.getEmail(),
                 userDTO.getPassword(),
                 null
         );
