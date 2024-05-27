@@ -1,12 +1,10 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.UserDTO;
-import com.litres.bookstore.exception.ResourceNotFoundException;
 import com.litres.bookstore.messaging.EmailGateway;
 import com.litres.bookstore.messaging.Letter;
 import com.litres.bookstore.model.User;
 import com.litres.bookstore.repository.UserRepository;
-import com.litres.bookstore.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;

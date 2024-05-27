@@ -1,9 +1,12 @@
 package com.wallet.service.service.impl;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.wallet.service.exception.NotEnoughMoneyException;
 import com.wallet.service.exception.WalletNotFoundException;
 import com.wallet.service.model.Wallet;
 import com.wallet.service.repository.WalletRepository;
@@ -21,6 +24,14 @@ public class WalletServiceImpl implements WalletService {
     public Wallet createWallet(Long userId, Float money){
         Wallet wallet = new Wallet();
         wallet.setUserId(userId);
+        wallet.setMoney(money);
+        walletRepository.save(wallet);
+        return wallet;
+    }
+
+    @Override
+    public Wallet updateWallet(Long userId, Float money) {
+        Wallet wallet = getWalletByUserId(userId);
         wallet.setMoney(money);
         walletRepository.save(wallet);
         return wallet;
@@ -45,26 +56,30 @@ public class WalletServiceImpl implements WalletService {
 
     @Transactional
     @Override 
-    public Boolean transactAuthorMoney(Long authorId, Float amount){
+    public Wallet transactAuthorMoney(Long authorId, Float amount){
         Wallet authorWallet = getWalletByUserId(authorId);
         Float currentMoney = authorWallet.getMoney();
 
-        if (currentMoney < amount) return false;
+        if (currentMoney < amount) {
+            throw new NotEnoughMoneyException("authorId", String.valueOf(authorId));
+        }
 
         authorWallet.setMoney(currentMoney - amount);
         walletRepository.save(authorWallet);
 
-        return true;
+        return authorWallet;
     }
 
     @Override
-    public Boolean transactAuthorAndReaderMoney(Long authorId, Long readerId, Float amount){
+    public Wallet transactAuthorAndReaderMoney(Long authorId, Long readerId, Float amount){
         Wallet authorWallet = getWalletByUserId(authorId);
         Wallet readerWallet = getWalletByUserId(readerId);
         Float authorCurrentMoney = authorWallet.getMoney();
         Float readerCurrentMoney = readerWallet.getMoney();
 
-        if (readerCurrentMoney < amount) return false;
+        if (readerCurrentMoney < amount) {
+            throw new NotEnoughMoneyException("readerId", String.valueOf(readerId));
+        };
 
         authorWallet.setMoney(authorCurrentMoney + amount);
         readerWallet.setMoney(readerCurrentMoney - amount);
@@ -72,7 +87,16 @@ public class WalletServiceImpl implements WalletService {
         walletRepository.save(authorWallet);
         walletRepository.save(readerWallet);
 
-        return true;
+        return readerWallet;
+    }
+
+    @Override
+    public Boolean isWalletExist(Long userId) {
+        Optional<Wallet> walletOptional = walletRepository.findByUserId(userId);
+        if (walletOptional.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
 }
