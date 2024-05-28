@@ -1,4 +1,4 @@
-package com.wallet.service.model;
+package com.service.emails.model;
 
 import java.io.Serializable;
 import lombok.AllArgsConstructor;

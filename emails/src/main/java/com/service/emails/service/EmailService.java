@@ -1,8 +1,8 @@
-package com.wallet.service.service;
+package com.service.emails.service;
 
 import org.springframework.stereotype.Service;
 
-import com.wallet.service.model.Email;
+import com.service.emails.model.Email;
 
 @Service
 public class EmailService {

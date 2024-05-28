@@ -24,7 +24,7 @@ public class EmailGateway {
             json = objectMapper.writeValueAsString(email);
 
             jmsTemplate.convertAndSend("email-queue", json, message -> {
-                message.setStringProperty("_type", "com.wallet.service.model.Email");
+                message.setStringProperty("_type", "com.service.emails.model.Email");
                 return message;
             });
             System.out.println("Sending email to " + to + "...");

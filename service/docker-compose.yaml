@@ -1,13 +1,4 @@
 services:
-  activemq:
-    image: 'symptoma/activemq:latest'
-    ports:
-      - '8161:8161'
-      - '61616:61616'
-    environment:
-      - ACTIVEMQ_NAME=activemq
-      - ACTIVEMQ_USERNAME=admin
-      - ACTIVEMQ_PASSWORD=password
   postgres:
     image: 'postgres:latest'
     environment:

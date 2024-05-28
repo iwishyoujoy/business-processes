@@ -1,3 +1,0 @@
-{"id":"192.168.240.65.tm171688616207100001","wasCommitted":true,"participants":[{"uri":"192.168.240.65.tm1","state":"COMMITTING","expires":1716886172013,"resourceName":"jmsConnectionFactory"}]}
-{"id":"192.168.240.65.tm171688616207100001","wasCommitted":true,"participants":[{"uri":"192.168.240.65.tm1","state":"TERMINATED","expires":1716886172020,"resourceName":"jmsConnectionFactory"}]}
-{"id":"192.168.240.65.tm171688616782300003","wasCommitted":false,"participants":[{"uri":"192.168.240.65.tm2","state":"TERMINATED","expires":1716886177749,"resourceName":"dataSource"}]}

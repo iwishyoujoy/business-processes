@@ -1,10 +1,10 @@
-package com.wallet.service.messaging;
+package com.service.emails.messaging;
 
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.context.annotation.Configuration;
 
-import com.wallet.service.model.Email;
-import com.wallet.service.service.EmailService;
+import com.service.emails.model.Email;
+import com.service.emails.service.EmailService;
 
 @Configuration
 public class EmailReceiver {
