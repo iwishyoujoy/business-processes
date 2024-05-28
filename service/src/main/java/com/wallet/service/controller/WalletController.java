@@ -48,7 +48,7 @@ public class WalletController {
         description = "HTTP Status 200 OK"
     )
     @GetMapping("/{userId}")
-    public ResponseEntity<Wallet> getBookById(@PathVariable Long userId) {
+    public ResponseEntity<Wallet> getWalletByUserId(@PathVariable Long userId) {
         return new ResponseEntity<>(walletService.getWalletByUserId(userId), HttpStatus.OK);
     }
 
@@ -80,7 +80,7 @@ public class WalletController {
         summary = "Delete Wallet by user id"
     )
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteBookById(@PathVariable Long userId){
+    public ResponseEntity<String> deleteWalletById(@PathVariable Long userId){
         if (!walletService.isWalletExist(userId)) {
             return new ResponseEntity<String>("Couldn't find a wallet with this user ID", HttpStatus.NOT_FOUND);
         }

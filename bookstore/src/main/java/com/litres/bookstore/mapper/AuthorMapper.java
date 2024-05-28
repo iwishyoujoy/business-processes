@@ -4,11 +4,20 @@ import org.springframework.stereotype.Component;
 
 import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.model.Author;
+import com.litres.bookstore.service.WalletService;
 
 @Component
 public class AuthorMapper {
 
+    private final WalletService walletService;
+
+    public AuthorMapper(WalletService walletService) {
+        this.walletService = walletService;
+    }
+
     public AuthorDTO mapToAuthorDTO(Author author){
+        Float money = walletService.getWalletByUserId(author.getId()).getMoney();
+
         AuthorDTO authorDto = new AuthorDTO(
             author.getId(),
             author.getLogin(),
@@ -16,7 +25,7 @@ public class AuthorMapper {
             author.getName(),
             author.getSurname(),
             author.getEmail(),
-            author.getMoney()
+            money
         );
         return authorDto;
     }
@@ -28,8 +37,7 @@ public class AuthorMapper {
             authorDTO.getPassword(),
             authorDTO.getName(),
             authorDTO.getSurname(),
-            authorDTO.getEmail(),
-            authorDTO.getMoney()
+            authorDTO.getEmail()
         );
         return author;
     }
@@ -40,6 +48,5 @@ public class AuthorMapper {
         author.setName(authorDTO.getName());
         author.setSurname(authorDTO.getSurname());
         author.setEmail(authorDTO.getEmail());
-        author.setMoney(authorDTO.getMoney());
     }
 }

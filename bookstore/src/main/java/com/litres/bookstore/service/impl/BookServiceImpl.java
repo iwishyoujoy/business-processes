@@ -56,11 +56,11 @@ public class BookServiceImpl implements BookService {
 
         Float bookCreationCost = 100.0f;
         
-        if (author.getMoney() < bookCreationCost) {
-            throw new IllegalArgumentException("Not enough money on the author's account");
-        }
+        // if (author.getMoney() < bookCreationCost) {
+        //     throw new IllegalArgumentException("Not enough money on the author's account");
+        // }
 
-        author.setMoney(author.getMoney() - bookCreationCost);
+        // author.setMoney(author.getMoney() - bookCreationCost);
         authorRepository.save(author);
         
         bookDTO.setAuthorId(author.getId());
@@ -95,14 +95,14 @@ public class BookServiceImpl implements BookService {
         Author author = book.getAuthor();
         Float bookCost = book.getPrice();
 
-        if (reader.getMoney() < bookCost) {
-            throw new IllegalArgumentException("Not enough money on the reader's account");
-        }
+        // if (reader.getMoney() < bookCost) {
+        //     throw new IllegalArgumentException("Not enough money on the reader's account");
+        // }
 
-        reader.setMoney(reader.getMoney() - bookCost);
+        // reader.setMoney(reader.getMoney() - bookCost);
         Reader savedReader = readerRepository.save(reader);
 
-        author.setMoney(author.getMoney() + bookCost);
+        // author.setMoney(author.getMoney() + bookCost);
         authorRepository.save(author);
         
         book.getReaders().add(savedReader);

@@ -23,9 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Reader {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String login;
@@ -33,7 +31,6 @@ public class Reader {
     private String name;
     private String surname;
     private String email;
-    private Float money;
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
@@ -46,14 +43,13 @@ public class Reader {
     private List<Book> books = new ArrayList<>();
 
     public Reader(Long id, String login, String password, String name, String surname, String email,
-        Float money, LocalDate birthDate) {
+        LocalDate birthDate) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.money = money;
         this.birthDate = birthDate;
     }
 

@@ -14,6 +14,7 @@ import com.litres.bookstore.model.Author;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.service.AuthorService;
+import com.litres.bookstore.service.WalletService;
 
 import lombok.AllArgsConstructor;
 
@@ -112,16 +113,16 @@ public class AuthorServiceImpl implements AuthorService {
             author.setEmail((String) updates.get("email"));
         }
 
-        if (updates.containsKey("money")) {
-            Object moneyObject = updates.get("money");
-            if (moneyObject instanceof Integer) {
-                author.setMoney(Float.valueOf((Integer) moneyObject));
-            } else if (moneyObject instanceof Float) {
-                author.setMoney((Float) moneyObject);
-            } else {
-                throw new IllegalArgumentException("Money must be a number");
-            }
-        }
+        // if (updates.containsKey("money")) {
+        //     Object moneyObject = updates.get("money");
+        //     if (moneyObject instanceof Integer) {
+        //         author.setMoney(Float.valueOf((Integer) moneyObject));
+        //     } else if (moneyObject instanceof Float) {
+        //         author.setMoney((Float) moneyObject);
+        //     } else {
+        //         throw new IllegalArgumentException("Money must be a number");
+        //     }
+        // }
 
         Author updatedAuthor = authorRepository.save(author);
         return Optional.of(authorMapper.mapToAuthorDTO(updatedAuthor));

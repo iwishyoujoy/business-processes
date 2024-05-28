@@ -125,16 +125,16 @@ public class ReaderServiceImpl implements ReaderService{
             reader.setEmail((String) updates.get("email"));
         }
 
-        if (updates.containsKey("money")) {
-            Object moneyObject = updates.get("money");
-            if (moneyObject instanceof Integer) {
-                reader.setMoney(Float.valueOf((Integer) moneyObject));
-            } else if (moneyObject instanceof Float) {
-                reader.setMoney((Float) moneyObject);
-            } else {
-                throw new IllegalArgumentException("Money must be a number");
-            }
-        }
+        // if (updates.containsKey("money")) {
+        //     Object moneyObject = updates.get("money");
+        //     if (moneyObject instanceof Integer) {
+        //         reader.setMoney(Float.valueOf((Integer) moneyObject));
+        //     } else if (moneyObject instanceof Float) {
+        //         reader.setMoney((Float) moneyObject);
+        //     } else {
+        //         throw new IllegalArgumentException("Money must be a number");
+        //     }
+        // }
 
         if (updates.containsKey("birthDate")) {
             Object birthObject = updates.get("birthDate");

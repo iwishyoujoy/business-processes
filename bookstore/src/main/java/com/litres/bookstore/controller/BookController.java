@@ -1,20 +1,26 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.BookDTO;
-import com.litres.bookstore.messaging.EmailGateway;
-import com.litres.bookstore.messaging.Letter;
+import com.litres.bookstore.model.Wallet;
+import com.litres.bookstore.model.WalletRequest;
+import com.litres.bookstore.service.AuthorService;
 import com.litres.bookstore.service.BookService;
-import com.litres.bookstore.service.ReaderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,9 +39,11 @@ import java.util.Map;
 public class BookController {
 
     private final BookService bookService;
+    private final AuthorService authorService;
 
-    public BookController(BookService bookService) {
+    public BookController(BookService bookService, AuthorService authorService) {
         this.bookService = bookService;
+        this.authorService = authorService;
     }
 
     @Operation(

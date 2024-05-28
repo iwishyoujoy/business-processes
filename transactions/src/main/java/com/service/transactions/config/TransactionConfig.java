@@ -1,4 +1,4 @@
-package main.java.com.service.transactions.config;
+package com.service.transactions.config;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;

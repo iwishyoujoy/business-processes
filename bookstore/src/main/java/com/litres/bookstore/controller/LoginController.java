@@ -51,7 +51,7 @@ public class LoginController {
 
             Optional<User> currentUser = userRepository.findByUsername(user.getLogin());
             if (currentUser.isPresent()) {
-                User loggedInUser = currentUser.get(); // Получаем значение из Optional
+                User loggedInUser = currentUser.get();
                 Letter letter = new Letter("Security message", "Was it you?", "Someone logged in to your account on Litres");
                 emailGateway.sendEmail(loggedInUser.getEmail(), letter);
             }

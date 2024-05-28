@@ -22,7 +22,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String login;
@@ -30,18 +29,16 @@ public class Author {
     private String name;
     private String surname;
     private String email;
-    private Float money;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
 
-    public Author(Long id, String login, String password, String name, String surname, String email, Float money){
+    public Author(Long id, String login, String password, String name, String surname, String email){
         this.id = id;
         this.login = login;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.money = money;
     }
 }

@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserDetailsService {
             .orElseThrow(() -> new ResourceNotFoundException("User", "login", username));
     }
 
+    public User findUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResourceNotFoundException("User", "login", username));
+    }
+
     public User findUserById(Long userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         return userFromDb.orElse(new User());
