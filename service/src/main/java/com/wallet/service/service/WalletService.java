@@ -1,5 +1,6 @@
 package com.wallet.service.service;
 
+import com.wallet.service.dto.Statistics;
 import com.wallet.service.model.Wallet;
 
 public interface WalletService {
@@ -11,4 +12,5 @@ public interface WalletService {
     Boolean isWalletExist(Long userId);
     Wallet transactAuthorMoney(Long authorId, Float amount);
     Wallet transactAuthorAndReaderMoney(Long authorId, Long readerId, Float amount);
+    Statistics getStatistics();
 }

@@ -1,11 +1,13 @@
 package com.wallet.service.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import com.wallet.service.dto.Statistics;
 import com.wallet.service.exception.NotEnoughMoneyException;
 import com.wallet.service.exception.WalletNotFoundException;
 import com.wallet.service.model.Wallet;
@@ -97,6 +99,25 @@ public class WalletServiceImpl implements WalletService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Statistics getStatistics() {
+        Long count = walletRepository.count();
+
+        List<Wallet> wallets = walletRepository.findAll(); 
+        Float totalAmount = 0.0f;
+    
+        if (!wallets.isEmpty()) { 
+            for (Wallet wallet : wallets) {
+                totalAmount += wallet.getMoney(); 
+            }
+            Float averageAmount = totalAmount / count;
+            
+            return new Statistics(count, averageAmount);
+        } else {
+            return new Statistics(count, 0.0f);
+        }
     }
 
 }

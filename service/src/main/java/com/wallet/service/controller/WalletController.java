@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.wallet.service.dto.MultipleWalletRequest;
+import com.wallet.service.dto.Statistics;
 import com.wallet.service.dto.WalletRequest;
 import com.wallet.service.model.Wallet;
 import com.wallet.service.service.impl.WalletServiceImpl;
@@ -50,6 +51,18 @@ public class WalletController {
     @GetMapping("/{userId}")
     public ResponseEntity<Wallet> getWalletByUserId(@PathVariable Long userId) {
         return new ResponseEntity<>(walletService.getWalletByUserId(userId), HttpStatus.OK);
+    }
+
+    @Operation(
+        summary = "Get statistics"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "HTTP Status 200 OK"
+    )
+    @GetMapping("/statistics")
+    public ResponseEntity<Statistics> getStatistics() {
+        return new ResponseEntity<>(walletService.getStatistics(), HttpStatus.OK);
     }
 
     @Operation(
