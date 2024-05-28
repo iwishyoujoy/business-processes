@@ -58,7 +58,8 @@ public class WalletService {
     }
 
     public Wallet updateWallet(WalletRequest walletRequest) {
-        ResponseEntity<Wallet> walletResponse = restTemplate.exchange(urlPathname, HttpMethod.PATCH, new HttpEntity<>(walletRequest), Wallet.class);
+        String url = urlPathname + "/update";
+        ResponseEntity<Wallet> walletResponse = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(walletRequest), Wallet.class);
         if (walletResponse.getStatusCode() != HttpStatus.OK){
             throw new ResourceNotFoundException("wallet", "userId", String.valueOf(walletRequest.getUserId()));
         }

@@ -149,7 +149,6 @@ public class AuthorController {
             .map(authorDTO -> new ResponseEntity<>(authorDTO, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    
 
     @Operation(
         summary = "Delete Author account"

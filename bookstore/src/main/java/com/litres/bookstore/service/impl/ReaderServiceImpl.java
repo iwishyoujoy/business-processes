@@ -13,9 +13,11 @@ import com.litres.bookstore.dto.UserDTO;
 import com.litres.bookstore.exception.ResourceNotFoundException;
 import com.litres.bookstore.model.Book;
 import com.litres.bookstore.model.Reader;
+import com.litres.bookstore.model.WalletRequest;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.ReaderService;
+import com.litres.bookstore.service.WalletService;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.mapper.ReaderMapper;
 
@@ -24,6 +26,8 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
+import java.time.format.DateTimeParseException;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +38,7 @@ public class ReaderServiceImpl implements ReaderService{
     private final BookMapper bookMapper;
     private final ReaderMapper readerMapper;
     private final UserServiceImpl userService;
+    private final WalletService walletService;
 
     @Override
     public Page<ReaderDTO> getAllReaders(Pageable pageable){
@@ -93,6 +98,7 @@ public class ReaderServiceImpl implements ReaderService{
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Reader reader = readerMapper.mapToReader(getReaderByLogin(userDetails.getUsername()));
         readerRepository.deleteById(reader.getId());
+        walletService.deleteWalletByUserId(reader.getId());
         userService.deleteUserByUsername(reader.getLogin());
     }
 
@@ -125,23 +131,26 @@ public class ReaderServiceImpl implements ReaderService{
             reader.setEmail((String) updates.get("email"));
         }
 
-        // if (updates.containsKey("money")) {
-        //     Object moneyObject = updates.get("money");
-        //     if (moneyObject instanceof Integer) {
-        //         reader.setMoney(Float.valueOf((Integer) moneyObject));
-        //     } else if (moneyObject instanceof Float) {
-        //         reader.setMoney((Float) moneyObject);
-        //     } else {
-        //         throw new IllegalArgumentException("Money must be a number");
-        //     }
-        // }
+        if (updates.containsKey("money")) {
+            Object moneyObject = updates.get("money");
+            if (moneyObject instanceof Integer) {
+                WalletRequest walletRequest = new WalletRequest(reader.getId(), Float.valueOf((Integer) moneyObject));
+                walletService.updateWallet(walletRequest);
+            } else if (moneyObject instanceof Float) {
+                WalletRequest walletRequest = new WalletRequest(reader.getId(), (Float) moneyObject);
+                walletService.updateWallet(walletRequest);
+            } else {
+                throw new IllegalArgumentException("Money must be a number");
+            }
+        }
 
         if (updates.containsKey("birthDate")) {
             Object birthObject = updates.get("birthDate");
             try {
-                reader.setBirthDate((LocalDate) birthObject);
+                LocalDate birthDate = LocalDate.parse(birthObject.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                reader.setBirthDate(birthDate);
             }
-            catch (IllegalArgumentException e) {
+            catch (DateTimeParseException e) {
                 throw new IllegalArgumentException("Birth date should be in format YYYY-MM-DD");
             }
         }

@@ -71,7 +71,7 @@ public class WalletController {
     @Operation(
         summary = "Update wallet"
     )
-    @PatchMapping
+    @PostMapping("/update")
     public ResponseEntity<Wallet> updateWallet(@RequestBody WalletRequest walletRequest) {
         return new ResponseEntity<>(walletService.updateWallet(walletRequest.getUserId(), walletRequest.getMoney()), HttpStatus.OK);
     }    

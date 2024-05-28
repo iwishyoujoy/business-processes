@@ -11,6 +11,7 @@ import com.litres.bookstore.dto.AuthorDTO;
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.dto.UserDTO;
 import com.litres.bookstore.model.Author;
+import com.litres.bookstore.model.WalletRequest;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.service.AuthorService;
@@ -34,6 +35,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final BookMapper bookMapper;
     private final AuthorMapper authorMapper;
     private final UserServiceImpl userService;
+    private final WalletService walletService;
 
     @Override
     public Page<AuthorDTO> getAllAuthors(Pageable pageable){
@@ -81,6 +83,7 @@ public class AuthorServiceImpl implements AuthorService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AuthorDTO author = getAuthorByLogin(userDetails.getUsername());
         authorRepository.deleteById(author.getId());
+        walletService.deleteWalletByUserId(author.getId());
         userService.deleteUserByUsername(author.getLogin()); 
     }
 
@@ -113,16 +116,18 @@ public class AuthorServiceImpl implements AuthorService {
             author.setEmail((String) updates.get("email"));
         }
 
-        // if (updates.containsKey("money")) {
-        //     Object moneyObject = updates.get("money");
-        //     if (moneyObject instanceof Integer) {
-        //         author.setMoney(Float.valueOf((Integer) moneyObject));
-        //     } else if (moneyObject instanceof Float) {
-        //         author.setMoney((Float) moneyObject);
-        //     } else {
-        //         throw new IllegalArgumentException("Money must be a number");
-        //     }
-        // }
+        if (updates.containsKey("money")) {
+            Object moneyObject = updates.get("money");
+            if (moneyObject instanceof Integer) {
+                WalletRequest walletRequest = new WalletRequest(author.getId(), Float.valueOf((Integer) moneyObject));
+                walletService.updateWallet(walletRequest);
+            } else if (moneyObject instanceof Float) {
+                WalletRequest walletRequest = new WalletRequest(author.getId(), (Float) moneyObject);
+                walletService.updateWallet(walletRequest);
+            } else {
+                throw new IllegalArgumentException("Money must be a number");
+            }
+        }
 
         Author updatedAuthor = authorRepository.save(author);
         return Optional.of(authorMapper.mapToAuthorDTO(updatedAuthor));

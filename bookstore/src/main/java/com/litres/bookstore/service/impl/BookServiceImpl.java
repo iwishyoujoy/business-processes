@@ -12,12 +12,15 @@ import lombok.AllArgsConstructor;
 import com.litres.bookstore.dto.BookDTO;
 import com.litres.bookstore.model.Author;
 import com.litres.bookstore.model.Book;
+import com.litres.bookstore.model.MultipleWalletRequest;
 import com.litres.bookstore.model.Reader;
+import com.litres.bookstore.model.WalletRequest;
 import com.litres.bookstore.model.enums.AgeRestriction;
 import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
 import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.BookService;
+import com.litres.bookstore.service.WalletService;
 import com.litres.bookstore.mapper.AuthorMapper;
 import com.litres.bookstore.mapper.BookMapper;
 import com.litres.bookstore.mapper.ReaderMapper;
@@ -41,6 +44,7 @@ public class BookServiceImpl implements BookService {
     private final AuthorMapper authorMapper;
     private final AuthorServiceImpl authorService;
     private final ReaderServiceImpl readerService;
+    private final WalletService walletService;
 
     @Override
     public Page<BookDTO> getAllBooks(Pageable pageable) {
@@ -54,14 +58,10 @@ public class BookServiceImpl implements BookService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Author author = authorMapper.mapToAuthor(authorService.getAuthorByLogin(userDetails.getUsername()));
 
-        Float bookCreationCost = 100.0f;
-        
-        // if (author.getMoney() < bookCreationCost) {
-        //     throw new IllegalArgumentException("Not enough money on the author's account");
-        // }
+        Float bookCreationCost = 200.0f;
 
-        // author.setMoney(author.getMoney() - bookCreationCost);
-        authorRepository.save(author);
+        WalletRequest walletRequest = new WalletRequest(author.getId(), bookCreationCost);
+        walletService.transactAuthorMoney(walletRequest);
         
         bookDTO.setAuthorId(author.getId());
         Book book = bookMapper.mapToBook(bookDTO);
@@ -85,6 +85,7 @@ public class BookServiceImpl implements BookService {
 
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Reader reader = readerMapper.mapToReader(readerService.getReaderByLogin(userDetails.getUsername()));
+        Author author = book.getAuthor();
 
         int readerAge = Period.between(reader.getBirthDate(), LocalDate.now()).getYears();
 
@@ -92,21 +93,13 @@ public class BookServiceImpl implements BookService {
             throw new AgeRestrictionException("You are too young to read this book");
         }
 
-        Author author = book.getAuthor();
         Float bookCost = book.getPrice();
 
-        // if (reader.getMoney() < bookCost) {
-        //     throw new IllegalArgumentException("Not enough money on the reader's account");
-        // }
-
-        // reader.setMoney(reader.getMoney() - bookCost);
-        Reader savedReader = readerRepository.save(reader);
-
-        // author.setMoney(author.getMoney() + bookCost);
-        authorRepository.save(author);
+        MultipleWalletRequest multipleWalletRequest = new MultipleWalletRequest(author.getId(), reader.getId(), bookCost);
+        walletService.transactReaderMoney(multipleWalletRequest);
         
-        book.getReaders().add(savedReader);
-        savedReader.getBooks().add(book);
+        book.getReaders().add(reader);
+        reader.getBooks().add(book);
         Book savedBook = bookRepository.save(book);
         return bookMapper.mapToBookDTO(savedBook);
     }
