@@ -16,9 +16,7 @@ import com.litres.bookstore.model.MultipleWalletRequest;
 import com.litres.bookstore.model.Reader;
 import com.litres.bookstore.model.WalletRequest;
 import com.litres.bookstore.model.enums.AgeRestriction;
-import com.litres.bookstore.repository.AuthorRepository;
 import com.litres.bookstore.repository.BookRepository;
-import com.litres.bookstore.repository.ReaderRepository;
 import com.litres.bookstore.service.BookService;
 import com.litres.bookstore.service.WalletService;
 import com.litres.bookstore.mapper.AuthorMapper;
@@ -37,8 +35,6 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
-    private ReaderRepository readerRepository;
     private final BookMapper bookMapper;
     private final ReaderMapper readerMapper;
     private final AuthorMapper authorMapper;

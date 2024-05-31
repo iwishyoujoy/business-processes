@@ -28,7 +28,7 @@ import com.service.schedule.config.AutoWiringSpringBeanJobFactory;
 @Configuration
 @EnableAutoConfiguration
 @ConditionalOnExpression("'${using.spring.schedulerFactory}'=='true'")
-public class SpringQrtzScheduler {
+public class SpringQuartzScheduler {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,13 +37,13 @@ public class SpringQrtzScheduler {
 
     @PostConstruct
     public void init() {
-        logger.info("Hello world from Spring...");
+        logger.info("Hello world from Spring...\n");
     }
 
     @Bean
     public SpringBeanJobFactory springBeanJobFactory() {
         AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();
-        logger.debug("Configuring Job factory");
+        logger.debug("Configuring Job factory\n");
 
         jobFactory.setApplicationContext(applicationContext);
         return jobFactory;
@@ -55,7 +55,7 @@ public class SpringQrtzScheduler {
         SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
         schedulerFactory.setConfigLocation(new ClassPathResource("quartz.properties"));
 
-        logger.debug("Setting the Scheduler up");
+        logger.debug("Setting the Scheduler up\n");
         schedulerFactory.setJobFactory(springBeanJobFactory());
         schedulerFactory.setJobDetails(job);
         schedulerFactory.setTriggers(trigger);
@@ -83,7 +83,7 @@ public class SpringQrtzScheduler {
         trigger.setJobDetail(job);
 
         int frequencyInSec = 60;
-        logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
+        logger.info("Configuring trigger to fire every {} seconds\n", frequencyInSec);
 
         trigger.setRepeatInterval(frequencyInSec * 1000);
         trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);

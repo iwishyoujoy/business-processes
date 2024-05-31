@@ -1,7 +1,6 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.BookDTO;
-import com.litres.bookstore.service.AuthorService;
 import com.litres.bookstore.service.BookService;
 
 import org.springframework.data.domain.Page;
@@ -30,11 +29,9 @@ import java.util.Map;
 public class BookController {
 
     private final BookService bookService;
-    private final AuthorService authorService;
 
-    public BookController(BookService bookService, AuthorService authorService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.authorService = authorService;
     }
 
     @Operation(

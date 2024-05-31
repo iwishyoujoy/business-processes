@@ -27,7 +27,7 @@ import java.util.Properties;
 
 @Configuration
 @ConditionalOnExpression("'${using.spring.schedulerFactory}'=='false'")
-public class QrtzScheduler {
+public class QuartzScheduler {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -36,13 +36,13 @@ public class QrtzScheduler {
 
     @PostConstruct
     public void init() {
-        logger.info("Hello world from Quartz...");
+        logger.info("Hello world from Quartz...\n");
     }
 
     @Bean
     public SpringBeanJobFactory springBeanJobFactory() {
         AutoWiringSpringBeanJobFactory jobFactory = new AutoWiringSpringBeanJobFactory();
-        logger.debug("Configuring Job factory");
+        logger.debug("Configuring Job factory\n");
 
         jobFactory.setApplicationContext(applicationContext);
         return jobFactory;
@@ -50,11 +50,11 @@ public class QrtzScheduler {
 
     @Bean
     public Scheduler scheduler(Trigger trigger, JobDetail job, SchedulerFactoryBean factory) throws SchedulerException {
-        logger.debug("Getting a handle to the Scheduler");
+        logger.debug("Getting a handle to the Scheduler\n");
         Scheduler scheduler = factory.getScheduler();
         scheduler.scheduleJob(job, trigger);
 
-        logger.debug("Starting Scheduler threads");
+        logger.debug("Starting Scheduler threads\n");
         scheduler.start();
         return scheduler;
     }
@@ -83,8 +83,8 @@ public class QrtzScheduler {
     @Bean
     public Trigger trigger(JobDetail job) {
 
-        int frequencyInSec = 10;
-        logger.info("Configuring trigger to fire every {} seconds", frequencyInSec);
+        int frequencyInSec = 300;
+        logger.info("Configuring trigger to fire every {} seconds\n", frequencyInSec);
 
         return newTrigger().forJob(job).withIdentity(TriggerKey.triggerKey("Qrtz_Trigger")).withDescription("Sample trigger").withSchedule(simpleSchedule().withIntervalInSeconds(frequencyInSec).repeatForever()).build();
     }

@@ -72,6 +72,7 @@ public class WalletServiceImpl implements WalletService {
         return authorWallet;
     }
 
+    @Transactional
     @Override
     public Wallet transactAuthorAndReaderMoney(Long authorId, Long readerId, Float amount){
         Wallet authorWallet = getWalletByUserId(authorId);

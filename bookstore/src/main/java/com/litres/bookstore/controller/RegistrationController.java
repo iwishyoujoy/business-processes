@@ -1,14 +1,11 @@
 package com.litres.bookstore.controller;
 
 import com.litres.bookstore.dto.AuthorDTO;
-import com.litres.bookstore.dto.AuthorWithWalletDTO;
 import com.litres.bookstore.dto.ReaderDTO;
-import com.litres.bookstore.dto.ReaderWithWalletDTO;
 import com.litres.bookstore.mapper.UserMapper;
 import com.litres.bookstore.messaging.EmailGateway;
 import com.litres.bookstore.messaging.Letter;
 import com.litres.bookstore.model.User;
-import com.litres.bookstore.model.Wallet;
 import com.litres.bookstore.model.WalletRequest;
 import com.litres.bookstore.service.AuthorService;
 import com.litres.bookstore.service.ReaderService;

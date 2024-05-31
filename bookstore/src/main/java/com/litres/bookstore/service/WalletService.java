@@ -21,7 +21,6 @@ public class WalletService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String urlPathname = "http://localhost:8090/api/wallets"; 
 
-
     public Wallet createWallet(WalletRequest walletRequest) {
         ResponseEntity<Wallet> walletResponse = restTemplate.exchange(urlPathname, HttpMethod.POST, new HttpEntity<>(walletRequest), Wallet.class);
         if (walletResponse.getStatusCode() != HttpStatus.CREATED){

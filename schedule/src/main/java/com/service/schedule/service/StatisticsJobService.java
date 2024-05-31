@@ -28,7 +28,7 @@ public class StatisticsJobService {
             logger.error("Couldn't retrieve statistics from the server, see logs");
         }
 
-        logger.info(String.format("Overall clients count: %d. With average of %f on a wallet", statisticsResponse.getBody().getCount(), statisticsResponse.getBody().getAverageMoney()));
+        logger.info(String.format("Overall clients count: %d. With average of %f on a wallet\n", statisticsResponse.getBody().getCount(), statisticsResponse.getBody().getAverageMoney()));
     }
 
     public int getNumberOfInvocations() {

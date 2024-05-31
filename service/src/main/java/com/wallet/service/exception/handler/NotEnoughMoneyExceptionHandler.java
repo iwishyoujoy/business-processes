@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.wallet.service.exception.WalletNotFoundException;
 
 @ControllerAdvice
-public class ResourceNotFoundExceptionHandler {
-
+public class NotEnoughMoneyExceptionHandler {
+    
     @ExceptionHandler(WalletNotFoundException.class)
     public ResponseEntity<String> WalletNotFoundException(WalletNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
