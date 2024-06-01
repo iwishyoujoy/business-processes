@@ -1,0 +1,17 @@
+{"id":"172.28.16.48.tm171722677596700001","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm1","state":"COMMITTING","expires":1717226785899,"resourceName":"jmsConnectionFactory"}]}
+{"id":"172.28.16.48.tm171722677596700001","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm1","state":"TERMINATED","expires":1717226785903,"resourceName":"jmsConnectionFactory"}]}
+{"id":"172.28.16.48.tm171722677847900002","wasCommitted":false,"participants":[{"uri":"172.28.16.48.tm2","state":"TERMINATED","expires":1717226788439,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722680683200003","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm3","state":"COMMITTING","expires":1717226816756,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722680683200003","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm3","state":"TERMINATED","expires":1717226816758,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722680687700004","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm4","state":"COMMITTING","expires":1717226816783,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722680687700004","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm4","state":"TERMINATED","expires":1717226816783,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722680999800005","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm5","state":"COMMITTING","expires":1717226819914,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722680999800005","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm5","state":"TERMINATED","expires":1717226819920,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722681009700006","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm6","state":"COMMITTING","expires":1717226820004,"resourceName":"jmsConnectionFactory"}]}
+{"id":"172.28.16.48.tm171722681009700006","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm6","state":"TERMINATED","expires":1717226820009,"resourceName":"jmsConnectionFactory"}]}
+{"id":"172.28.16.48.tm171722681012400007","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm7","state":"COMMITTING","expires":1717226820033,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722681012400007","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm7","state":"TERMINATED","expires":1717226820033,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722685352400009","wasCommitted":false,"participants":[{"uri":"172.28.16.48.tm8","state":"TERMINATED","expires":1717226863680,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722685767700010","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm9","state":"COMMITTING","expires":1717226867714,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722685767700010","wasCommitted":true,"participants":[{"uri":"172.28.16.48.tm9","state":"TERMINATED","expires":1717226867865,"resourceName":"dataSource"}]}
+{"id":"172.28.16.48.tm171722686366000011","wasCommitted":false,"participants":[{"uri":"172.28.16.48.tm10","state":"TERMINATED","expires":1717226873577,"resourceName":"dataSource"}]}
